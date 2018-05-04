@@ -28,4 +28,16 @@ public class RegisterFragment extends Fragment {
         ET_USER_PASS_CONF = view.findViewById(R.id.user_password_confirm);
     }
 
+    public void userReg(View view) {
+        user_name = ET_USER_NAME.getText().toString();
+        user_email = ET_USER_EMAIL.getText().toString();
+        user_password = ET_USER_PASSWORD.getText().toString();
+        user_pass_conf = ET_USER_PASS_CONF.getText().toString();
+        String method = "register";
+        //BackgroundTask backgroundTask = new BackgroundTask(this);
+        //backgroundTask.execute(method, name, user_name, user_pass);
+        //finish();
+    }
+
+
 }
