@@ -9,13 +9,12 @@
         android:layout_height="wrap_content"
         android:background="@android:color/holo_orange_dark"
         android:padding="20sp"
-        android:text="Main Activity"
+        android:text="@string/main_activity"
         android:textAlignment="center" />
 
-    <fragment
-        android:id="@+id/login_fragment"
-        android:name="com.mahmon.bookcat.LoginFragment"
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content" />
 
 </LinearLayout>
