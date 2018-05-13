@@ -11,4 +11,6 @@
     <string name="name">name</string>
     <string name="register">register</string>
     <string name="re_enter_password">re-enter password</string>
+    <string name="no_account_click_here">No account? Click here.</string>
+    <string name="logo">Logo</string>
 </resources>
