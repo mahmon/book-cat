@@ -19,6 +19,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 public class RegisterFragment extends Fragment {
 
@@ -36,8 +37,6 @@ public class RegisterFragment extends Fragment {
         View fragViewRegister = inflater.inflate(R.layout.fragment_register, container, false);
         // Initialise Firebase authorisation instance
         mAuth = FirebaseAuth.getInstance();
-        // Get current user from firebase
-        FirebaseUser currentUser = mAuth.getCurrentUser();
         // Link to view elements
         userName = fragViewRegister.findViewById(R.id.user_name);
         userEmail = fragViewRegister.findViewById(R.id.user_email);
@@ -61,10 +60,21 @@ public class RegisterFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
+    /* COMMENT THIS METHOD
+     * set it to open new screen and display user name
+     * add password checking logic
+     *
+     *
+     */
     // Method to register user with Firebase authentication
     public void registerUser() {
-        String email = userEmail.getText().toString().trim();
-        String password = userPassword.getText().toString().trim();
+        final String name = userName.getText().toString().trim();
+        final String email = userEmail.getText().toString().trim();
+        final String password = userPassword.getText().toString().trim();
+        if (TextUtils.isEmpty(name)) {
+            Toast.makeText(getContext(), "Enter name!", Toast.LENGTH_SHORT).show();
+            return;
+        }
         if (TextUtils.isEmpty(email)) {
             Toast.makeText(getContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
             return;
@@ -83,9 +93,11 @@ public class RegisterFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-
-                            //String user_id = mAuth.getCurrentUser().getUid();
-
+                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                    .setDisplayName(name)
+                                    .build();
+                            user.updateProfile(profileUpdates);
                             // Sign in success
                             Toast.makeText(getContext(), "Success", Toast.LENGTH_LONG).show();
                         } else {
