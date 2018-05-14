@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -46,18 +47,22 @@ public class LoginFragment extends Fragment {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO add validation
+                // Get email and password from EditText boxes
                 final String email = userEmail.getText().toString().trim();
                 final String password = userPassword.getText().toString().trim();
+                // Check email address entered
                 if (TextUtils.isEmpty(email)) {
-                    Toast.makeText(getContext(), "Enter email!", Toast.LENGTH_SHORT).show();
+                    // If not prompt user
+                    Toast.makeText(getContext(), "Enter email address", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                // Check password entered
                 if (TextUtils.isEmpty(password)) {
-                    Toast.makeText(getContext(), "Enter name!", Toast.LENGTH_SHORT).show();
+                    // If not prompt user
+                    Toast.makeText(getContext(), "Enter password", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                // Call login method
+                // Call login method when email and password entered
                 logIn(email, password);
             }
         });
@@ -78,45 +83,62 @@ public class LoginFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
-    // Action to take if user logged in
+    // Action to take if user is already logged in
     private void checkLoggedIn(FirebaseUser user) {
         if (user != null) {
+            // Call the goto welcome screen
             gotoWelcomeScreen();
         }
     }
 
+    // Log in method
     private void logIn(String email, String password) {
+        // Sign in with email and password
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
+                    // When the task completes...
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        // If user logged in succesfully
                         if (task.isSuccessful()) {
-                            // Sign in success
+                            // Call gotoWelcomeScreen method
                             gotoWelcomeScreen();
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Toast.makeText(getContext(), "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
                         }
                     }
-                });
+                // Add and on failure listener, called if login fails
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                // Get details of the failure error
+                String error = e.getLocalizedMessage();
+                // If sign in fails, display a message to the user.
+                Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     // Method to create new fragment and replace in the fragment container
     public void gotoRegisterScreen() {
+        // Create fragment transaction object
         final FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        // Put the RegisterFragment into the fragment_container
         fragmentTransaction.replace(R.id.fragment_container, new RegisterFragment());
+        // Don't add the fragment to the back stack (avois issues with back button)
         fragmentTransaction.addToBackStack(null);
+        // Commit the transaction
         fragmentTransaction.commit();
     }
 
     // Method to create new fragment and replace in the fragment container
     public void gotoWelcomeScreen() {
+        // Create fragment transaction object
         final FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        // Put the WelcomeFragment into the fragment_container
         fragmentTransaction.replace(R.id.fragment_container, new WelcomeFragment());
+        // Don't add the fragment to the back stack (avois issues with back button)
         fragmentTransaction.addToBackStack(null);
+        // Commit the transaction
         fragmentTransaction.commit();
     }
-
 
 }
