@@ -123,8 +123,7 @@ public class RegisterFragment extends Fragment {
         fragmentTransaction.commit();
     }
 
-    // Method to
-
+    // Method to react if user is logged in
     private void isLoggedIn(FirebaseUser user) {
         // If the user is logged in
         if (user != null) {

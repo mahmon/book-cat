@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,8 +22,6 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class LoginFragment extends Fragment {
 
-    /* ADD SIGN OUT BUTTON TO WELCOME SCREEN*/
-
     // Firebase authorisation instance
     private FirebaseAuth mAuth;
     // View elements
@@ -38,7 +37,6 @@ public class LoginFragment extends Fragment {
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         checkLoggedIn(currentUser);
-        // Link view elements
         // Link to view elements
         userEmail = fragViewLogin.findViewById(R.id.user_email);
         userPassword = fragViewLogin.findViewById(R.id.user_password);
@@ -49,8 +47,16 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // TODO add validation
-                String email = userEmail.getText().toString().trim();
-                String password = userPassword.getText().toString().trim();
+                final String email = userEmail.getText().toString().trim();
+                final String password = userPassword.getText().toString().trim();
+                if (TextUtils.isEmpty(email)) {
+                    Toast.makeText(getContext(), "Enter email!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (TextUtils.isEmpty(password)) {
+                    Toast.makeText(getContext(), "Enter name!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 // Call login method
                 logIn(email, password);
             }
