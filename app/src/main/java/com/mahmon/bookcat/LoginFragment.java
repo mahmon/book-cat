@@ -105,7 +105,7 @@ public class LoginFragment extends Fragment {
                             gotoWelcomeScreen();
                         }
                     }
-                // Add and on failure listener, called if login fails
+                // Add on failure listener, called if login fails
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
