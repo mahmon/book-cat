@@ -1,12 +1,11 @@
 package com.mahmon.bookcat;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +36,12 @@ public class RegisterFragment extends Fragment {
         View fragViewRegister = inflater.inflate(R.layout.fragment_register, container, false);
         // Initialise Firebase authorisation instance
         mAuth = FirebaseAuth.getInstance();
+        // Sign out any logged in user
+        mAuth.signOut();
+        // Check if user is signed in already
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        // Call isLoggedIn passing in current user
+        isLoggedIn(currentUser);
         // Link to view elements
         userName = fragViewRegister.findViewById(R.id.user_name);
         userEmail = fragViewRegister.findViewById(R.id.user_email);
@@ -99,13 +104,33 @@ public class RegisterFragment extends Fragment {
                                     .build();
                             user.updateProfile(profileUpdates);
                             // Sign in success
-                            Toast.makeText(getContext(), "Success", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), "Sign up success", Toast.LENGTH_LONG).show();
+                            isLoggedIn(user);
                         } else {
                             // Sign in fails
-                            Toast.makeText(getContext(), "Failure", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Sign up failure", Toast.LENGTH_SHORT).show();
+                            // TODO expand error handling for failed sign up
                         }
                     }
                 });
+    }
+
+    // Method to create new fragment and replace in the fragment container
+    public void gotoWelcomeScreen() {
+        final FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, new WelcomeFragment());
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+    // Method to
+
+    private void isLoggedIn(FirebaseUser user) {
+        // If the user is logged in
+        if (user != null) {
+            // Launch the welcome fragment
+            gotoWelcomeScreen();
+        }
     }
 
 }
