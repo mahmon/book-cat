@@ -40,7 +40,7 @@ public class CatalogueFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Create fragViewLogin instance
-        View fragViewWelcome = inflater.inflate(R.layout.fragment_welcome, container, false);
+        View fragViewWelcome = inflater.inflate(R.layout.fragment_catalogue, container, false);
         // Get context
         mContext = getContext();
         // Instantiate books array
