@@ -3,6 +3,8 @@ package com.mahmon.bookcat;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.mahmon.bookcat.ui.LoginFragment;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override

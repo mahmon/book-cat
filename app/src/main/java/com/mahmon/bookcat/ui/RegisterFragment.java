@@ -1,4 +1,4 @@
-package com.mahmon.bookcat;
+package com.mahmon.bookcat.ui;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,6 +20,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.mahmon.bookcat.R;
+import com.mahmon.bookcat.ui.LoginFragment;
 
 public class RegisterFragment extends Fragment {
 
@@ -148,7 +150,7 @@ public class RegisterFragment extends Fragment {
     public void gotoLoginScreen() {
         // Create fragment transaction object
         final FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        // Put the WelcomeFragment into the fragment_container
+        // Put the CatalogueFragment into the fragment_container
         fragmentTransaction.replace(R.id.fragment_container, new LoginFragment());
         // Don't add the fragment to the back stack (avoids issues with back button)
         fragmentTransaction.addToBackStack(null);
