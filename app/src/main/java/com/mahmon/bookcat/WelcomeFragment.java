@@ -15,6 +15,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class WelcomeFragment extends Fragment {
 
     /* DEVELOP WELCOME SCREEN UI NEXT, SET UP CRUD TO DATABASE */
+    // BRANCH START
 
     // Firebase authorisation instance
     private FirebaseAuth mAuth;
