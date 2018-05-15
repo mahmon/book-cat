@@ -2,14 +2,21 @@ package com.mahmon.bookcat.model;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mahmon.bookcat.R;
+import com.mahmon.bookcat.ui.BookFragment;
+import com.mahmon.bookcat.ui.RegisterFragment;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -21,12 +28,14 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
+        private CardView cardView;
         public TextView title;
         public TextView isbn;
         public ImageView thumbnail;
 
         public MyViewHolder(View view) {
             super(view);
+            cardView = view.findViewById(R.id.card_view);
             title = view.findViewById(R.id.book_title);
             thumbnail = view.findViewById(R.id.book_thumbnail);
         }
@@ -50,13 +59,24 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Book book = booksList.get(position);
         holder.title.setText(book.getTitle());
-        // TODO load image into card view
+        // Cardview clicks
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //implement onClick
+                AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                Fragment bookFragment = new BookFragment();
+                activity.getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, bookFragment).addToBackStack(null).commit();
+                Toast.makeText(mContext, "CARD CLICKED!!!", Toast.LENGTH_SHORT).show();
+            }
+        });
+        // Load image into card view
         String isbn = book.getIsbn();
         String imageUrl = "http://covers.openlibrary.org/b/isbn/" + isbn + ".jpg";
         Picasso.with(mContext)
                 .load(imageUrl)
-                .resize(300, 400)
-                .centerCrop()
+                .fit().centerCrop()
                 .into(holder.thumbnail);
     }
 

@@ -50,7 +50,7 @@ public class CatalogueFragment extends Fragment {
         // Link to xml recycler_view
         recyclerView = fragViewWelcome.findViewById(R.id.recycler_view);
         // Create 2 column grid for layout
-        recyclerViewLayoutManager = new GridLayoutManager(mContext, 2);
+        recyclerViewLayoutManager = new GridLayoutManager(mContext, 3);
         // Set the layout manager
         recyclerView.setLayoutManager(recyclerViewLayoutManager);
         // Set the adapter

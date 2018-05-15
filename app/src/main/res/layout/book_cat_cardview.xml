@@ -10,13 +10,13 @@
         android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="0dp"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginBottom="0dp"
         android:layout_marginTop="8dp"
-        card_view:cardCornerRadius="6dp"
+        card_view:cardCornerRadius="0dp"
         card_view:layout_constraintEnd_toEndOf="parent"
         card_view:layout_constraintStart_toStartOf="parent"
         card_view:layout_constraintTop_toTopOf="parent">
@@ -34,11 +34,10 @@
             <TextView
                 android:id="@+id/book_title"
                 android:layout_width="match_parent"
+                android:textAlignment="center"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/book_thumbnail"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:paddingTop="8dp" />
+                android:padding="8dp" />
 
         </RelativeLayout>
 
