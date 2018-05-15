@@ -54,7 +54,6 @@ public class WelcomeFragment extends Fragment {
         gotoLoginScreen();
     }
 
-
     // Method to create new fragment and replace in the fragment container
     public void gotoLoginScreen() {
         final FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
