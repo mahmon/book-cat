@@ -50,7 +50,7 @@ public class CatalogueFragment extends Fragment {
         // Link to xml recycler_view
         recyclerView = fragViewWelcome.findViewById(R.id.recycler_view);
         // Create 2 column grid for layout
-        recyclerViewLayoutManager = new GridLayoutManager(mContext, 3);
+        recyclerViewLayoutManager = new GridLayoutManager(mContext, 2);
         // Set the layout manager
         recyclerView.setLayoutManager(recyclerViewLayoutManager);
         // Set the adapter
@@ -97,21 +97,21 @@ public class CatalogueFragment extends Fragment {
 
     /* Create dummy book data to test recycler view */
     private void prepareBookData() {
-        Book book1 = new Book("1234567890", "Great Expextations", "Charles Dickens");
+        Book book1 = new Book("9780066238500", "Great Expextations", "Charles Dickens");
         booksList.add(book1);
-        Book book2 = new Book("1234567890", "Great Expextations", "Charles Dickens");
+        Book book2 = new Book("9780385533225", "Great Expextations", "Charles Dickens");
         booksList.add(book2);
-        Book book3 = new Book("1234567890", "Great Expextations", "Charles Dickens");
+        Book book3 = new Book("9780451167712", "Great Expextations", "Charles Dickens");
         booksList.add(book3);
-        Book book4 = new Book("1234567890", "Great Expextations", "Charles Dickens");
+        Book book4 = new Book("9780385533225", "Great Expextations", "Charles Dickens");
         booksList.add(book4);
-        Book book5 = new Book("1234567890", "Great Expextations", "Charles Dickens");
+        Book book5 = new Book("9780385533225", "Great Expextations", "Charles Dickens");
         booksList.add(book5);
-        Book book6 = new Book("1234567890", "Great Expextations", "Charles Dickens");
+        Book book6 = new Book("9780385533225", "Great Expextations", "Charles Dickens");
         booksList.add(book6);
-        Book book7 = new Book("1234567890", "Great Expextations", "Charles Dickens");
+        Book book7 = new Book("9780385533225", "Great Expextations", "Charles Dickens");
         booksList.add(book7);
-        Book book8 = new Book("1234567890", "Great Expextations", "Charles Dickens");
+        Book book8 = new Book("9780385533225", "Great Expextations", "Charles Dickens");
         booksList.add(book8);
         // Update the adapter
         bookAdapter.notifyDataSetChanged();

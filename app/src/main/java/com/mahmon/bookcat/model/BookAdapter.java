@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mahmon.bookcat.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -50,6 +51,13 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
         Book book = booksList.get(position);
         holder.title.setText(book.getTitle());
         // TODO load image into card view
+        String isbn = book.getIsbn();
+        String imageUrl = "http://covers.openlibrary.org/b/isbn/" + isbn + ".jpg";
+        Picasso.with(mContext)
+                .load(imageUrl)
+                .resize(300, 400)
+                .centerCrop()
+                .into(holder.thumbnail);
     }
 
     @Override
