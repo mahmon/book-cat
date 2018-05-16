@@ -16,4 +16,7 @@
     <string name="sign_out">Sign Out</string>
     <string name="add_book">Add Book</string>
     <string name="save_book">Save Book</string>
+    <string name="author">author</string>
+    <string name="title">title</string>
+    <string name="isbn">isbn</string>
 </resources>

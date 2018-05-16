@@ -43,21 +43,30 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <ImageView
-        android:id="@+id/app_logo"
-        android:layout_width="match_parent"
+    <RelativeLayout
+        android:id="@+id/logo_container"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="64dp"
-        android:layout_marginLeft="64dp"
-        android:layout_marginRight="64dp"
-        android:layout_marginStart="64dp"
-        android:layout_marginTop="18dp"
-        android:contentDescription="@string/logo"
-        android:scaleType="fitCenter"
-        android:src="@drawable/book_cat_logo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tool_bar_top" />
+        app:layout_constraintTop_toBottomOf="@+id/tool_bar_top">
+
+        <ImageView
+            android:id="@+id/app_logo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="32dp"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/logo"
+            android:maxHeight="60dp"
+            android:maxWidth="60dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/book_cat_logo" />
+
+    </RelativeLayout>
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/fragment_container"
@@ -67,10 +76,10 @@
         android:layout_marginLeft="0dp"
         android:layout_marginRight="0dp"
         android:layout_marginStart="0dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/app_logo" />
-    
+        app:layout_constraintTop_toBottomOf="@+id/logo_container" />
+
 </android.support.constraint.ConstraintLayout>

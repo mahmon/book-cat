@@ -3,13 +3,13 @@ package com.mahmon.bookcat.ui;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.mahmon.bookcat.R;
 import com.mahmon.bookcat.model.Book;
@@ -20,8 +20,6 @@ import java.util.List;
 
 public class CatalogueFragment extends Fragment {
 
-    /* NEED TO WORK ON CRUD = C first */
-
     // Fragment context
     private Context mContext;
     // Recycler view variables
@@ -30,9 +28,8 @@ public class CatalogueFragment extends Fragment {
     private BookAdapter bookAdapter;
     // Book Array
     private List<Book> booksList;
-    // Bottom menu
-    private android.support.v7.widget.Toolbar mToolBarBottom;
-
+    // Bottom button
+    private Button btnAddBook;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,26 +49,13 @@ public class CatalogueFragment extends Fragment {
         recyclerView.setLayoutManager(recyclerViewLayoutManager);
         // Set the adapter
         recyclerView.setAdapter(bookAdapter);
-        // Link to bottom toolbar
-        mToolBarBottom = fragViewCatalogue.findViewById(R.id.tool_bar_bottom);
-        // Inflate XML menu_tool_bar_bottom to bottomToolbar
-        mToolBarBottom.inflateMenu(R.menu.menu_bottom);
-        // Set up bottom toolbar
-        mToolBarBottom.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+        // Link to the button
+        btnAddBook = fragViewCatalogue.findViewById(R.id.btn_add_book);
+        // Add listener for button
+        btnAddBook.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    // User clicked add_book
-                    case R.id.add_book:
-                        gotoAddBook();
-                        return true;
-                    // User clicked save_book
-                    case R.id.save_book:
-                        // todo
-                        return true;
-                    default:
-                        return false;
-                }
+            public void onClick(View v) {
+                gotoAddBook();
             }
         });
 
@@ -80,9 +64,16 @@ public class CatalogueFragment extends Fragment {
         return fragViewCatalogue;
     }
 
-    // Goto add book fragment
+    // Method to create new fragment and replace in the fragment container
     public void gotoAddBook() {
-        // TODO
+        // Create fragment transaction object
+        final FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        // Put the RegisterFragment into the fragment_container
+        fragmentTransaction.replace(R.id.fragment_container, new AddBookFragment());
+        // Don't add the fragment to the back stack (avois issues with back button)
+        fragmentTransaction.addToBackStack(null);
+        // Commit the transaction
+        fragmentTransaction.commit();
     }
 
     /* Create dummy book data to test recycler view */

@@ -31,6 +31,8 @@ public class LoginFragment extends Fragment {
     // View elements
     private EditText userEmail;
     private EditText userPassword;
+    private Button btnLogin;
+    private TextView clickToSignUp;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,8 +46,8 @@ public class LoginFragment extends Fragment {
         // Link to view elements
         userEmail = fragViewLogin.findViewById(R.id.user_email);
         userPassword = fragViewLogin.findViewById(R.id.user_password);
-        Button btnLogin = fragViewLogin.findViewById(R.id.btn_login);
-        TextView clickToSignUp = fragViewLogin.findViewById(R.id.click_to_sign_up);
+        btnLogin = fragViewLogin.findViewById(R.id.btn_login);
+        clickToSignUp = fragViewLogin.findViewById(R.id.click_to_sign_up);
         // Attach listener to the button
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
