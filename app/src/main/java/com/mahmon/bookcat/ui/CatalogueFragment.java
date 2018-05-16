@@ -5,7 +5,9 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -28,11 +30,14 @@ public class CatalogueFragment extends Fragment {
     private BookAdapter bookAdapter;
     // Book Array
     private List<Book> booksList;
+    // Bottom menu
+    private android.support.v7.widget.Toolbar mToolBarBottom;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Create fragViewLogin instance
-        View fragViewWelcome = inflater.inflate(R.layout.fragment_catalogue, container, false);
+        View fragViewCatalogue = inflater.inflate(R.layout.fragment_catalogue, container, false);
         // Get context
         mContext = getContext();
         // Instantiate books array
@@ -40,17 +45,44 @@ public class CatalogueFragment extends Fragment {
         // Create the adapter
         bookAdapter = new BookAdapter(mContext, booksList);
         // Link to xml recycler_view
-        recyclerView = fragViewWelcome.findViewById(R.id.recycler_view);
+        recyclerView = fragViewCatalogue.findViewById(R.id.recycler_view);
         // Create 2 column grid for layout
         recyclerViewLayoutManager = new GridLayoutManager(mContext, 3);
         // Set the layout manager
         recyclerView.setLayoutManager(recyclerViewLayoutManager);
         // Set the adapter
         recyclerView.setAdapter(bookAdapter);
+        // Link to bottom toolbar
+        mToolBarBottom = fragViewCatalogue.findViewById(R.id.tool_bar_bottom);
+        // Inflate XML menu_tool_bar_bottom to bottomToolbar
+        mToolBarBottom.inflateMenu(R.menu.menu_bottom);
+        // Set up bottom toolbar
+        mToolBarBottom.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    // User clicked add_book
+                    case R.id.add_book:
+                        gotoAddBook();
+                        return true;
+                    // User clicked save_book
+                    case R.id.save_book:
+                        // todo
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        });
 
         prepareBookData();
 
-        return fragViewWelcome;
+        return fragViewCatalogue;
+    }
+
+    // Goto add book fragment
+    public void gotoAddBook() {
+        // TODO
     }
 
     /* Create dummy book data to test recycler view */

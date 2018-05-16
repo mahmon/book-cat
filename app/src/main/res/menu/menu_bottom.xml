@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/add_book"
+        android:title="@string/add_book"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/save_book"
+        android:title="@string/save_book"
+        app:showAsAction="ifRoom" />
+
+</menu>

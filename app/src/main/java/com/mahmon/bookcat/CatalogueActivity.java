@@ -34,12 +34,9 @@ public class CatalogueActivity extends AppCompatActivity {
         toolbarTop = findViewById(R.id.tool_bar_top);
         userName = findViewById(R.id.logged_in_user_name);
         signOut = findViewById(R.id.sign_out);
-        // Set up toolbar
+        // Set up top toolbar
         setSupportActionBar(toolbarTop);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-
-
         // Initialise Firebase authorisation instance
         mAuth = FirebaseAuth.getInstance();
         // Get signed in user details
@@ -48,7 +45,7 @@ public class CatalogueActivity extends AppCompatActivity {
         // Set user name
         String message = "Signed in as: " + name;
         userName.setText(message);
-        // Add listner for sign out
+        // Add listener for sign out
         signOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
