@@ -3,17 +3,12 @@ package com.mahmon.bookcat.ui;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.mahmon.bookcat.R;
 import com.mahmon.bookcat.model.Book;
 import com.mahmon.bookcat.model.BookAdapter;
@@ -31,11 +26,6 @@ public class CatalogueFragment extends Fragment {
     private BookAdapter bookAdapter;
     // Book Array
     private List<Book> booksList;
-    // Firebase authorisation instance
-    private FirebaseAuth mAuth;
-    // View elements
-    private TextView userName;
-    private Button btnSignOut;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -59,40 +49,7 @@ public class CatalogueFragment extends Fragment {
         /* DUMMY DATA */
         prepareBookData();
 
-        // Initialise Firebase authorisation instance
-        mAuth = FirebaseAuth.getInstance();
-        // Get signed in user details
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        String name = currentUser.getDisplayName();
-        // Link to view elements
-        userName = fragViewWelcome.findViewById(R.id.logged_in_user_name);
-        btnSignOut = fragViewWelcome.findViewById(R.id.btn_sign_out);
-        // Set user name
-        userName.setText("Signed in as: " + name);
-        // Attach listener to the button
-        btnSignOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Call sign out method
-                signOut();
-            }
-        });
-        // Return the fragment view to the activity
         return fragViewWelcome;
-    }
-
-    // Sign out method
-    public void signOut() {
-        mAuth.signOut();
-        gotoLoginScreen();
-    }
-
-    // Method to create new fragment and replace in the fragment container
-    public void gotoLoginScreen() {
-        final FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, new LoginFragment());
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
     }
 
     /* Create dummy book data to test recycler view */

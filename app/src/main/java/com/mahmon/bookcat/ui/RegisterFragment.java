@@ -21,7 +21,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.mahmon.bookcat.R;
-import com.mahmon.bookcat.ui.LoginFragment;
 
 public class RegisterFragment extends Fragment {
 

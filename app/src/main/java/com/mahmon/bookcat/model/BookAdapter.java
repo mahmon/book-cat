@@ -3,7 +3,6 @@ package com.mahmon.bookcat.model;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -16,7 +15,6 @@ import android.widget.Toast;
 
 import com.mahmon.bookcat.R;
 import com.mahmon.bookcat.ui.BookFragment;
-import com.mahmon.bookcat.ui.RegisterFragment;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

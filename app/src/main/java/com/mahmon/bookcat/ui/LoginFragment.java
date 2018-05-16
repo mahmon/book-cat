@@ -1,5 +1,6 @@
 package com.mahmon.bookcat.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,6 +21,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.mahmon.bookcat.CatalogueActivity;
 import com.mahmon.bookcat.R;
 
 public class LoginFragment extends Fragment {
@@ -88,7 +90,7 @@ public class LoginFragment extends Fragment {
     private void checkLoggedIn(FirebaseUser user) {
         if (user != null) {
             // Call the goto welcome screen
-            gotoWelcomeScreen();
+            gotoCatalogueScreen();
         }
     }
 
@@ -103,7 +105,7 @@ public class LoginFragment extends Fragment {
                         // If user logged in succesfully
                         if (task.isSuccessful()) {
                             // Call gotoWelcomeScreen method
-                            gotoWelcomeScreen();
+                            gotoCatalogueScreen();
                         }
                     }
                 // Add on failure listener, called if login fails
@@ -131,15 +133,11 @@ public class LoginFragment extends Fragment {
     }
 
     // Method to create new fragment and replace in the fragment container
-    public void gotoWelcomeScreen() {
-        // Create fragment transaction object
-        final FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        // Put the CatalogueFragment into the fragment_container
-        fragmentTransaction.replace(R.id.fragment_container, new CatalogueFragment());
-        // Don't add the fragment to the back stack (avois issues with back button)
-        fragmentTransaction.addToBackStack(null);
-        // Commit the transaction
-        fragmentTransaction.commit();
+    public void gotoCatalogueScreen() {
+        // Instantiate new intent to start DisplayEventsActivity
+        Intent intent = new Intent(getContext(), CatalogueActivity.class);
+        // Start Activity
+        startActivity(intent);
     }
 
 }
