@@ -37,6 +37,9 @@ public class CatalogueActivity extends AppCompatActivity {
         // Set up toolbar
         setSupportActionBar(toolbarTop);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+
+
         // Initialise Firebase authorisation instance
         mAuth = FirebaseAuth.getInstance();
         // Get signed in user details
@@ -52,7 +55,6 @@ public class CatalogueActivity extends AppCompatActivity {
                 signOut();
             }
         });
-
     }
 
     // Sign out method
