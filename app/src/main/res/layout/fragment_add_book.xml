@@ -20,40 +20,6 @@
         android:imeOptions="actionNext"
         android:inputType="text"
         android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@id/book_title"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <EditText
-        android:id="@+id/book_title"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:hint="@string/title"
-        android:imeOptions="actionNext"
-        android:inputType="text"
-        android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@id/book_author"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <EditText
-        android:id="@+id/book_author"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:hint="@string/author"
-        android:imeOptions="actionDone"
-        android:inputType="text"
-        android:textAlignment="center"
         app:layout_constraintBottom_toTopOf="@id/btn_save_book"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

@@ -20,10 +20,18 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.mahmon.bookcat.R;
 
 public class RegisterFragment extends Fragment {
 
+    // Node to store users under
+    private static final String USERSNODE = "Users";
+    private static final String NAMENODE = "Name";
+    // Firebase database
+    private FirebaseDatabase mDatabase;
+    private DatabaseReference mDatabaseRef;
     // Firebase authorisation instance
     private FirebaseAuth mAuth;
     // View elements
@@ -40,6 +48,9 @@ public class RegisterFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         // Sign out any logged in user
         mAuth.signOut();
+        // Get Firebase instance and database ref
+        mDatabase = FirebaseDatabase.getInstance();
+        mDatabaseRef = mDatabase.getReference().child(USERSNODE);
         // Link to view elements
         userName = fragViewRegister.findViewById(R.id.user_name);
         userEmail = fragViewRegister.findViewById(R.id.user_email);
@@ -106,17 +117,21 @@ public class RegisterFragment extends Fragment {
                     @Override
                     // When the task completes...
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        // If user succesfully registered
+                        // If user successfully registered
                         if (task.isSuccessful()) {
                             // Get the current user (just created and logged in automatically)
                             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                             // Update the user profile
                             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                    // Set their displayt name
+                                    // Set their display name
                                     .setDisplayName(name)
                                     .build();
                             // Run the updates
                             user.updateProfile(profileUpdates);
+                            // Create entry in database
+                            String userID = user.getUid();
+                            String name = user.getDisplayName();
+                            mDatabaseRef.child(userID).child(NAMENODE).setValue("pooey");
                             // Sign in success
                             Toast.makeText(getContext(), "Sign up success, please login", Toast.LENGTH_LONG).show();
                             // Call the isLoggedIn method
@@ -139,7 +154,7 @@ public class RegisterFragment extends Fragment {
     private void newUserRegistered(FirebaseUser user) {
         // If the user is logged in
         if (user != null) {
-            // Launch the welcomeFagment
+            // Launch the welcomeFragment
             mAuth.signOut();
             gotoLoginScreen();
         }

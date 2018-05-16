@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "281771513193-lf0fjvofvc0j5v6j4r1ukppc4g4aqr0n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mahmon.bookcat",
+            "certificate_hash": "2d34bf6e3282550ca1d74a3985a89d8358be9959"
+          }
+        },
+        {
           "client_id": "281771513193-63ishsahlkimpqfich6gg6gftts0rdg1.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
