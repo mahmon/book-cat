@@ -18,7 +18,7 @@ import java.util.List;
 
 public class CatalogueFragment extends Fragment {
 
-    // created crud branch
+    /* NEED TO WORK ON CRUD = C first */
 
     // Fragment context
     private Context mContext;
@@ -48,7 +48,6 @@ public class CatalogueFragment extends Fragment {
         // Set the adapter
         recyclerView.setAdapter(bookAdapter);
 
-        /* DUMMY DATA */
         prepareBookData();
 
         return fragViewWelcome;
