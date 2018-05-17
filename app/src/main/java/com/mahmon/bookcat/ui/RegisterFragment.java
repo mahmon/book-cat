@@ -130,8 +130,7 @@ public class RegisterFragment extends Fragment {
                             user.updateProfile(profileUpdates);
                             // Create entry in database
                             String userID = user.getUid();
-                            String name = user.getDisplayName();
-                            mDatabaseRef.child(userID).child(NAMENODE).setValue("pooey");
+                            mDatabaseRef.child(userID).child(NAMENODE).setValue(name);
                             // Sign in success
                             Toast.makeText(getContext(), "Sign up success, please login", Toast.LENGTH_LONG).show();
                             // Call the isLoggedIn method

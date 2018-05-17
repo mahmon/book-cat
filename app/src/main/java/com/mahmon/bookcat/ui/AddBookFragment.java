@@ -1,11 +1,11 @@
 package com.mahmon.bookcat.ui;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,13 +15,19 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.mahmon.bookcat.R;
 
 public class AddBookFragment extends Fragment {
 
-    private static final String bookNode = "Books";
+    // Node to store books under
+    private static final String USERSNODE = "Users";
+    private static final String BOOKNODE = "Books";
 
     // Firebase authorisation
     private FirebaseAuth mAuth;
@@ -46,7 +52,7 @@ public class AddBookFragment extends Fragment {
         userUid = currentUser.getUid();
         // Get Firebase instance and database ref
         mDatabase = FirebaseDatabase.getInstance();
-        mDatabaseRef = mDatabase.getReference(userUid);
+        mDatabaseRef = mDatabase.getReference().child(USERSNODE);
         // Link to view elements
         bookIsbn = fragViewAddBook.findViewById(R.id.book_isbn);
         btnSaveBook = fragViewAddBook.findViewById(R.id.btn_save_book);
@@ -62,8 +68,8 @@ public class AddBookFragment extends Fragment {
                     Toast.makeText(getContext(), "Enter ISBN", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                // Call login method when email and password entered
-                saveBook(isbn);
+                // Check if book exists already
+                checkIfBookExists(isbn);
             }
         });
         return fragViewAddBook;
@@ -74,10 +80,15 @@ public class AddBookFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
+    public void checkIfBookExists(final String isbn) {
+        // Query the database for existing value
+        // if in database give warning
+        // else call save
+    }
+
     private void saveBook(String isbn) {
         Toast.makeText(getContext(), userUid, Toast.LENGTH_LONG).show();
         // Write a message to the database
-        mDatabaseRef.child(bookNode).setValue(isbn);
+        mDatabaseRef.child(userUid).child(BOOKNODE).push().setValue(isbn);
     }
-
 }
