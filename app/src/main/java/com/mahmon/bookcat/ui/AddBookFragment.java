@@ -138,15 +138,21 @@ public class AddBookFragment extends Fragment {
 
     // Method to create new fragment and replace in the fragment container
     public void gotoBook(String isbn) {
+        // Create new BookFragment
+        BookFragment bookFragment = new BookFragment();
+        // Create new data bundle
+        Bundle bookData = new Bundle();
+        // Store the isbn value in the data bundle
+        bookData.putString(Constants.ISBN_KEY, isbn);
+        // Add the bundle to the fragment
+        bookFragment.setArguments(bookData);
         // Create fragment transaction object
         final FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        // Put the RegisterFragment into the fragment_container
-        fragmentTransaction.replace(R.id.fragment_container, new BookFragment());
+        // Put the bookFragment into the fragment_container
+        fragmentTransaction.replace(R.id.fragment_container, bookFragment);
         // Don't add the fragment to the back stack (avoids issues with back button)
         fragmentTransaction.addToBackStack(null);
         // Commit the transaction
         fragmentTransaction.commit();
-
-        // TODO pass isbn value
     }
 }
