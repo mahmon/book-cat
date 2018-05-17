@@ -80,23 +80,27 @@ public class AddBookFragment extends Fragment {
     }
 
     public void checkIfBookExists(final String isbn) {
-        Query isbnQuery = mDatabaseRef.child(userUid).child(BOOKNODE).equalTo(isbn);
-        isbnQuery.addValueEventListener(new ValueEventListener() {
+
+        Query query = mDatabaseRef.child(userUid).child(BOOKNODE).orderByValue();
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot innerSnap: dataSnapshot.getChildren()) {
+                    if (innerSnap.child("ISBN").getValue(String.class).equals(isbn)) {
+                        return;
+                    }
+                }
+                saveBook(isbn);
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
         });
-        // Query the database for existing value
-        // if in database give warning
-        // else call save
     }
 
     private void saveBook(String isbn) {
         Toast.makeText(getContext(), userUid, Toast.LENGTH_LONG).show();
         // Write a message to the database
-        mDatabaseRef.child(userUid).child(BOOKNODE).push().setValue(isbn);
+        mDatabaseRef.child(userUid).child(BOOKNODE).push().child("ISBN").setValue(isbn);
     }
 }
