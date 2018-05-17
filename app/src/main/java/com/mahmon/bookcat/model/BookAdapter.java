@@ -34,7 +34,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
         public MyViewHolder(View view) {
             super(view);
             cardView = view.findViewById(R.id.card_view);
-            title = view.findViewById(R.id.book_title);
+            title = view.findViewById(R.id.book_isbn);
             thumbnail = view.findViewById(R.id.book_thumbnail);
         }
 
@@ -61,11 +61,6 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //implement onClick
-                AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                Fragment bookFragment = new BookFragment();
-                activity.getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, bookFragment).addToBackStack(null).commit();
                 Toast.makeText(mContext, "CARD CLICKED!!!", Toast.LENGTH_SHORT).show();
             }
         });

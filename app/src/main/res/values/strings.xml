@@ -19,4 +19,5 @@
     <string name="author">author</string>
     <string name="title">title</string>
     <string name="isbn">isbn</string>
+    <string name="view_catalogue">View Catalogue</string>
 </resources>

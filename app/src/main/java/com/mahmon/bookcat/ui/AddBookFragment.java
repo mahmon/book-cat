@@ -1,5 +1,6 @@
 package com.mahmon.bookcat.ui;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -26,6 +27,8 @@ import com.mahmon.bookcat.R;
 
 public class AddBookFragment extends Fragment {
 
+    // Context
+    Context mContext;
     // Nodes for database access
     private static final String USERSNODE = "Users";
     private static final String BOOKNODE = "Books";
@@ -48,6 +51,8 @@ public class AddBookFragment extends Fragment {
         // Create fragViewLogin instance
         View fragViewAddBook = inflater
                 .inflate(R.layout.fragment_add_book, container, false);
+        // Get context
+        mContext = getContext();
         // Initialise Firebase authorisation instance
         mAuth = FirebaseAuth.getInstance();
         // Get current user UID
@@ -68,21 +73,21 @@ public class AddBookFragment extends Fragment {
                 // Check a value is entered
                 if (TextUtils.isEmpty(isbn)) {
                     // If not prompt user
-                    Toast.makeText(getContext(),
+                    Toast.makeText(mContext,
                             "Enter ISBN", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 // Check only digits are entered
                 if (!TextUtils.isDigitsOnly(isbn)) {
                     // If not prompt user
-                    Toast.makeText(getContext(),
+                    Toast.makeText(mContext,
                             "Enter numbers only", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 // Check only digits are entered
                 if (isbn.length() != 10 && isbn.length() != 13) {
                     // If not prompt user
-                    Toast.makeText(getContext(),
+                    Toast.makeText(mContext,
                             "ISBNs must be 10 or 13 digits long", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -131,7 +136,7 @@ public class AddBookFragment extends Fragment {
         // Push the ISBN to the database ('push' generates a unique key for each book)
         mDatabaseRef.child(userUid).child(BOOKNODE).push().child("ISBN").setValue(isbn);
         // Write confirmation message
-        Toast.makeText(getContext(), "Book saved", Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), "Book saved", Toast.LENGTH_SHORT).show();
         // Goto book page
         gotoBook(isbn);
     }
