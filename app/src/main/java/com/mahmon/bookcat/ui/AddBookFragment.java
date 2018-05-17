@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,6 +80,15 @@ public class AddBookFragment extends Fragment {
     }
 
     public void checkIfBookExists(final String isbn) {
+        Query isbnQuery = mDatabaseRef.child(userUid).child(BOOKNODE).equalTo(isbn);
+        isbnQuery.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
         // Query the database for existing value
         // if in database give warning
         // else call save
