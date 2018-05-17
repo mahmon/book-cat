@@ -58,9 +58,9 @@ public class CatalogueFragment extends Fragment {
                 gotoAddBook();
             }
         });
-
+        /*DUMMY DATA*/
         prepareBookData();
-
+        // Return the fragment view to the container
         return fragViewCatalogue;
     }
 

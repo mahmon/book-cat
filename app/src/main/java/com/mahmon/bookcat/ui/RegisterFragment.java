@@ -133,7 +133,7 @@ public class RegisterFragment extends Fragment {
                             mDatabaseRef.child(userID).child(NAMENODE).setValue(name);
                             // Sign in success
                             Toast.makeText(getContext(), "Sign up success, please login", Toast.LENGTH_LONG).show();
-                            // Call the isLoggedIn method
+                            // Call the newUserRegistered method
                             newUserRegistered(user);
                         }
                     }
@@ -153,8 +153,9 @@ public class RegisterFragment extends Fragment {
     private void newUserRegistered(FirebaseUser user) {
         // If the user is logged in
         if (user != null) {
-            // Launch the welcomeFragment
+            // Sign user out
             mAuth.signOut();
+            // Call goto login screen
             gotoLoginScreen();
         }
     }
@@ -163,7 +164,7 @@ public class RegisterFragment extends Fragment {
     public void gotoLoginScreen() {
         // Create fragment transaction object
         final FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        // Put the CatalogueFragment into the fragment_container
+        // Put the LoginFragment into the fragment_container
         fragmentTransaction.replace(R.id.fragment_container, new LoginFragment());
         // Don't add the fragment to the back stack (avoids issues with back button)
         fragmentTransaction.addToBackStack(null);
