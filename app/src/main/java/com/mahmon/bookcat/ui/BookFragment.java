@@ -21,13 +21,15 @@ import com.mahmon.bookcat.model.GoogleApiRequest;
 
 public class BookFragment extends Fragment {
 
-    // Fragement context
+    // Fragment context
     private Context mContext;
     // View elements
     private TextView bookTitle;
     private TextView bookAuthor;
     private TextView bookIsbn;
+
     private TextView jsonText;
+
     private Button btnGotoCatalogue;
     // String to isbn data
     private String isbn;
@@ -42,37 +44,24 @@ public class BookFragment extends Fragment {
         Bundle bookData = getArguments();
         isbn = bookData.getString(Constants.ISBN_KEY);
         // Link to view items
+        bookTitle = fragViewBook.findViewById(R.id.book_title);
+        bookAuthor = fragViewBook.findViewById(R.id.book_author);
         bookIsbn = fragViewBook.findViewById(R.id.book_isbn);
         jsonText = fragViewBook.findViewById(R.id.json_text);
         btnGotoCatalogue = fragViewBook.findViewById(R.id.btn_goto_catalogue);
-        // Set the isbn text
+        // Set the view text
+        bookTitle.setText("Test Title");
+        bookAuthor.setText("Test Author");
         bookIsbn.setText(isbn);
 
         /* TEST JSON */
-        // Formulate the request and handle the response.
-        String url = "https://www.googleapis.com/books/v1/volumes?q=isbn:1861976127";
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        // Do something with the response
-                        jsonText.setText(response);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // Handle error
-                    }
-                });
-        // Get a RequestQueue
-        RequestQueue queue = GoogleApiRequest
-                .getInstance(mContext.getApplicationContext())
-                .getRequestQueue();
-        // Add a request to the RequestQueue.
-        GoogleApiRequest.getInstance(mContext)
-                .addToRequestQueue(stringRequest);
-
+        String testIsbn = "1861976127";
+        GoogleApiRequest.getInstance(mContext).getStringResult(testIsbn, new GoogleApiRequest.VolleyCallback() {
+            @Override
+            public void onSuccessResponse(String result) {
+                jsonText.setText(result);
+            }
+        });
 
         // Set listener for button
         btnGotoCatalogue.setOnClickListener(new View.OnClickListener() {
