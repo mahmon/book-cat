@@ -78,22 +78,8 @@ public class CatalogueFragment extends Fragment {
 
     /* Create dummy book data to test recycler view */
     private void prepareBookData() {
-        Book book1 = new Book("9780066238500", "Great Expextations", "Charles Dickens");
+        Book book1 = new Book("9780066238500", "Great Expextations", "Charles Dickens", "imageURL");
         booksList.add(book1);
-        Book book2 = new Book("9780385533225", "Great Expextations", "Charles Dickens");
-        booksList.add(book2);
-        Book book3 = new Book("9780451167712", "Great Expextations", "Charles Dickens");
-        booksList.add(book3);
-        Book book4 = new Book("9780385533225", "Great Expextations", "Charles Dickens");
-        booksList.add(book4);
-        Book book5 = new Book("9780385533225", "Great Expextations", "Charles Dickens");
-        booksList.add(book5);
-        Book book6 = new Book("9780385533225", "Great Expextations", "Charles Dickens");
-        booksList.add(book6);
-        Book book7 = new Book("9780385533225", "Great Expextations", "Charles Dickens");
-        booksList.add(book7);
-        Book book8 = new Book("9780385533225", "Great Expextations", "Charles Dickens");
-        booksList.add(book8);
         // Update the adapter
         bookAdapter.notifyDataSetChanged();
     }

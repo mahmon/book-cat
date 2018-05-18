@@ -5,14 +5,17 @@ public class Book {
     private String isbn;
     private String title;
     private String author;
+    private String coverImageURL;
 
+    // Empty constructor required by firebase rules
     public Book() {
     }
 
-    public Book(String isbn, String title, String author) {
+    public Book(String isbn, String title, String author, String coverImageURL) {
         this.isbn = isbn;
         this.title = title;
         this.author = author;
+        this.coverImageURL = coverImageURL;
     }
 
     public String getIsbn() {
@@ -39,4 +42,11 @@ public class Book {
         this.author = author;
     }
 
+    public String getCoverImageURL() {
+        return coverImageURL;
+    }
+
+    public void setCoverImageURL(String coverImageURL) {
+        this.coverImageURL = coverImageURL;
+    }
 }

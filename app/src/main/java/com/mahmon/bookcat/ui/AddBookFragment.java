@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -31,10 +32,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import static com.mahmon.bookcat.Constants.BOOK_NODE;
+
 public class AddBookFragment extends Fragment {
 
     // Context
-    Context mContext;
+    private Context mContext;
     // Firebase authorisation
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
@@ -44,7 +47,7 @@ public class AddBookFragment extends Fragment {
     private DatabaseReference mDatabaseRef;
     // View elements
     private EditText bookIsbn;
-    private Button btnLookUpBook;
+    private Button btnAddBook;
 
     @Nullable
     @Override
@@ -66,12 +69,12 @@ public class AddBookFragment extends Fragment {
         mDatabaseRef = mDatabase.getReference().child(Constants.USERS_NODE);
         // Link to view elements
         bookIsbn = fragViewAddBook.findViewById(R.id.book_isbn);
-        btnLookUpBook = fragViewAddBook.findViewById(R.id.btn_look_up_book);
+        btnAddBook = fragViewAddBook.findViewById(R.id.btn_add_book);
         // Attach listener to the button
-        btnLookUpBook.setOnClickListener(new View.OnClickListener() {
+        btnAddBook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Get email and password from EditText boxes
+                // Get isbn from EditText boxes
                 final String isbn = bookIsbn.getText().toString().trim();
                 // Check a value is entered
                 if (TextUtils.isEmpty(isbn)) {
@@ -87,15 +90,15 @@ public class AddBookFragment extends Fragment {
                             "Enter numbers only", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                // Check only digits are entered
+                // Check only 10 or 13 digits are entered
                 if (isbn.length() != 10 && isbn.length() != 13) {
                     // If not prompt user
                     Toast.makeText(mContext,
                             "ISBNs must be 10 or 13 digits long", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                // Check if book already in users books, if not look it up with google
-                checkIfBookExists(isbn);
+                // Check if book already in users library, if not look it up on google books api
+                checkIfBookInUsersLibrary(isbn);
             }
         });
         return fragViewAddBook;
@@ -106,26 +109,23 @@ public class AddBookFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
-    // Query database to check if book exists
-    public void checkIfBookExists(final String isbn) {
+    // Query user library to check if book already entered
+    public void checkIfBookInUsersLibrary(final String isbn) {
         // Create query on Book Node
-        Query query = mDatabaseRef.child(userUid).child(Constants.BOOK_NODE).orderByValue();
-        // Attach listener to query
+        Query query = mDatabaseRef
+                .child(userUid)
+                .child(Constants.BOOK_NODE)
+                .orderByValue();
+        // Attach listener to the query
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            // Called first time query is run
             public void onDataChange(DataSnapshot dataSnapshot) {
-                // Iterate through the children of the BookNode dataSnapShot
-                for (DataSnapshot innerSnap: dataSnapshot.getChildren()) {
-                    // Check for existing ISBN value matching the input value
-                    if (innerSnap.child(Constants.ISBN_KEY).getValue(String.class).equals(isbn)) {
-                        String errorMsg = isbn + " is already in your collection";
-                        // Prompt the user that they already have this isbn in their collection
-                        Toast.makeText(getContext(), errorMsg, Toast.LENGTH_LONG).show();
-                        return;
-                    }
+                if ( dataSnapshot.hasChild(isbn) ) {
+                    String error = isbn + " is already in your library";
+                    Toast.makeText(mContext, error, Toast.LENGTH_LONG).show();
+                    return;
                 }
-                // Else run the saveBook method
+                // Else run the lookUpBook method
                 lookUpBook(isbn);
             }
             @Override
@@ -136,36 +136,54 @@ public class AddBookFragment extends Fragment {
 
     // Look up and create book from GoogleApiRequest
     private void lookUpBook(final String isbn) {
-        // Pass isbn to getGoogleBookAsJSONObject from GoogleApiRequest class
+        // Pass isbn to getGoogleBookAsJSONObject method from GoogleApiRequest class
         GoogleApiRequest.getInstance(mContext)
                 .getGoogleBookAsJSONObject(isbn, new GoogleApiRequest.VolleyCallback() {
             @Override
-            public void onSuccessResponse(JSONObject result) throws JSONException {
-
-                // TEST : This Works! Complete JSON file prints to toast message
-                //String s = result.toString();
-                //Toast.makeText(mContext, s, Toast.LENGTH_LONG).show();
-
-                // BELOW HERE IS NOT WORKING, returns blank, I want the title from JSON
-                JSONArray books = result.getJSONArray("items");
+            // JSONObject returned - a googleBook JSON file
+            public void onSuccessResponse(JSONObject googleBookJSON) throws JSONException {
+                // Create links to the data in JSONObject
+                JSONArray books = googleBookJSON.getJSONArray("items");
                 JSONObject book = books.getJSONObject(0);
-                JSONObject info = book.getJSONObject("volumeInfo");
-                String title = info.getString("title");
-                String msg = "Title: " + title;
-                Toast.makeText(mContext, msg, Toast.LENGTH_LONG).show();
-
+                JSONObject bookInfo = book.getJSONObject("volumeInfo");
+                // Store the data in methods as strings
+                String title = bookInfo.getString("title");
+                String author = bookInfo.getJSONArray("authors").getString(0);
+                String coverImageURL = bookInfo.getJSONObject("imageLinks").getString("thumbnail");
+                // Call method to save book to user library
+                saveBookToUserLibrary(isbn, title, author, coverImageURL);
             }
         });
     }
 
+    // Method to save book to user library
+    private void saveBookToUserLibrary(final String isbn,
+                                       String title,
+                                       String author,
+                                       String coverImageURL) {
+        // Create new book in user library with string data
+        Book userBook = new Book(isbn, title, author, coverImageURL);
+        // Save the book to the database under users unique id
+        mDatabaseRef.child(userUid).child(BOOK_NODE).child(isbn)
+                .setValue(userBook)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        gotoBook(isbn, userUid);
+                    }
+                });
+        Toast.makeText(mContext, "Book saved to your library", Toast.LENGTH_SHORT).show();
+    }
+
     // Method to create new fragment and replace in the fragment container
-    public void gotoBook(String isbn) {
+    private void gotoBook(String isbn, String userUid) {
         // Create new BookFragment
         BookFragment bookFragment = new BookFragment();
         // Create new data bundle
         Bundle bookData = new Bundle();
-        // Store the isbn value in the data bundle
+        // Store the isbn value and userUid in the data bundle
         bookData.putString(Constants.ISBN_KEY, isbn);
+        bookData.putString(Constants.USER, userUid);
         // Add the bundle to the fragment
         bookFragment.setArguments(bookData);
         // Create fragment transaction object

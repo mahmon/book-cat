@@ -9,17 +9,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.mahmon.bookcat.Constants;
 import com.mahmon.bookcat.R;
-import com.mahmon.bookcat.model.GoogleApiRequest;
+import com.mahmon.bookcat.model.Book;
 
-import org.json.JSONObject;
+import static com.mahmon.bookcat.Constants.BOOK_NODE;
 
 public class BookFragment extends Fragment {
 
@@ -29,12 +30,17 @@ public class BookFragment extends Fragment {
     private TextView bookTitle;
     private TextView bookAuthor;
     private TextView bookIsbn;
-
-    private TextView jsonText;
-
     private Button btnGotoCatalogue;
+    // Firebase database
+    private FirebaseDatabase mDatabase;
+    private DatabaseReference mDatabaseRef;
+    private ValueEventListener mDatabaseListener;
+    // Signed in user ID
+    private String userUid;
     // String to isbn data
     private String isbn;
+    // Single book object
+    private Book book;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -45,26 +51,37 @@ public class BookFragment extends Fragment {
         // Get the passed arguments
         Bundle bookData = getArguments();
         isbn = bookData.getString(Constants.ISBN_KEY);
+        userUid = bookData.getString(Constants.USER);
         // Link to view items
         bookTitle = fragViewBook.findViewById(R.id.book_title);
         bookAuthor = fragViewBook.findViewById(R.id.book_author);
         bookIsbn = fragViewBook.findViewById(R.id.book_isbn);
-        jsonText = fragViewBook.findViewById(R.id.json_text);
         btnGotoCatalogue = fragViewBook.findViewById(R.id.btn_goto_catalogue);
-        // Set the view text
-        bookTitle.setText("Test Title");
-        bookAuthor.setText("Test Author");
-        bookIsbn.setText(isbn);
+        // Get Firebase instance and database ref to book
+        mDatabase = FirebaseDatabase.getInstance();
+        mDatabaseRef = mDatabase.getReference()
+                .child(Constants.USERS_NODE)
+                .child(userUid)
+                .child(BOOK_NODE)
+                .child(isbn);
 
-        /* TEST JSON */
-        String testIsbn = "1861976127";
-        GoogleApiRequest.getInstance(mContext).getGoogleBookAsJSONObject(testIsbn, new GoogleApiRequest.VolleyCallback() {
+        // Get book from database
+        // Instantiate database listener
+        mDatabaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onSuccessResponse(JSONObject result) {
-                final String s = result.toString();
-                jsonText.setText(s);
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                book = dataSnapshot.getValue(Book.class);
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
             }
         });
+
+        // Set the view text
+        bookTitle.setText(book.getTitle());
+        //bookAuthor.setText(book.getAuthor());
+        //bookIsbn.setText(book.getIsbn());
 
         // Set listener for button
         btnGotoCatalogue.setOnClickListener(new View.OnClickListener() {
