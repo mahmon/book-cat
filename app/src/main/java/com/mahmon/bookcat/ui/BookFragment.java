@@ -19,6 +19,8 @@ import com.mahmon.bookcat.Constants;
 import com.mahmon.bookcat.R;
 import com.mahmon.bookcat.model.GoogleApiRequest;
 
+import org.json.JSONObject;
+
 public class BookFragment extends Fragment {
 
     // Fragment context
@@ -56,10 +58,11 @@ public class BookFragment extends Fragment {
 
         /* TEST JSON */
         String testIsbn = "1861976127";
-        GoogleApiRequest.getInstance(mContext).getStringResult(testIsbn, new GoogleApiRequest.VolleyCallback() {
+        GoogleApiRequest.getInstance(mContext).getGoogleBookAsJSONObject(testIsbn, new GoogleApiRequest.VolleyCallback() {
             @Override
-            public void onSuccessResponse(String result) {
-                jsonText.setText(result);
+            public void onSuccessResponse(JSONObject result) {
+                final String s = result.toString();
+                jsonText.setText(s);
             }
         });
 

@@ -24,14 +24,17 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.mahmon.bookcat.Constants;
 import com.mahmon.bookcat.R;
+import com.mahmon.bookcat.model.Book;
+import com.mahmon.bookcat.model.GoogleApiRequest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class AddBookFragment extends Fragment {
 
     // Context
     Context mContext;
-    // Nodes for database access
-    private static final String USERSNODE = "Users";
-    private static final String BOOKNODE = "Books";
     // Firebase authorisation
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
@@ -41,7 +44,7 @@ public class AddBookFragment extends Fragment {
     private DatabaseReference mDatabaseRef;
     // View elements
     private EditText bookIsbn;
-    private Button btnSaveBook;
+    private Button btnLookUpBook;
 
     @Nullable
     @Override
@@ -63,9 +66,9 @@ public class AddBookFragment extends Fragment {
         mDatabaseRef = mDatabase.getReference().child(Constants.USERS_NODE);
         // Link to view elements
         bookIsbn = fragViewAddBook.findViewById(R.id.book_isbn);
-        btnSaveBook = fragViewAddBook.findViewById(R.id.btn_save_book);
+        btnLookUpBook = fragViewAddBook.findViewById(R.id.btn_look_up_book);
         // Attach listener to the button
-        btnSaveBook.setOnClickListener(new View.OnClickListener() {
+        btnLookUpBook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Get email and password from EditText boxes
@@ -91,7 +94,7 @@ public class AddBookFragment extends Fragment {
                             "ISBNs must be 10 or 13 digits long", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                // Check if book exists already
+                // Check if book already in users books, if not look it up with google
                 checkIfBookExists(isbn);
             }
         });
@@ -123,7 +126,7 @@ public class AddBookFragment extends Fragment {
                     }
                 }
                 // Else run the saveBook method
-                saveBook(isbn);
+                lookUpBook(isbn);
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -131,14 +134,28 @@ public class AddBookFragment extends Fragment {
         });
     }
 
-    // Save ISBN number to users database
-    private void saveBook(String isbn) {
-        // Push the ISBN to the database ('push' generates a unique key for each book)
-        mDatabaseRef.child(userUid).child(BOOKNODE).push().child("ISBN").setValue(isbn);
-        // Write confirmation message
-        Toast.makeText(getContext(), "Book saved", Toast.LENGTH_SHORT).show();
-        // Goto book page
-        gotoBook(isbn);
+    // Look up and create book from GoogleApiRequest
+    private void lookUpBook(final String isbn) {
+        // Pass isbn to getGoogleBookAsJSONObject from GoogleApiRequest class
+        GoogleApiRequest.getInstance(mContext)
+                .getGoogleBookAsJSONObject(isbn, new GoogleApiRequest.VolleyCallback() {
+            @Override
+            public void onSuccessResponse(JSONObject result) throws JSONException {
+
+                // TEST : This Works! Complete JSON file prints to toast message
+                //String s = result.toString();
+                //Toast.makeText(mContext, s, Toast.LENGTH_LONG).show();
+
+                // BELOW HERE IS NOT WORKING, returns blank, I want the title from JSON
+                JSONArray books = result.getJSONArray("items");
+                JSONObject book = books.getJSONObject(0);
+                JSONObject info = book.getJSONObject("volumeInfo");
+                String title = info.getString("title");
+                String msg = "Title: " + title;
+                Toast.makeText(mContext, msg, Toast.LENGTH_LONG).show();
+
+            }
+        });
     }
 
     // Method to create new fragment and replace in the fragment container

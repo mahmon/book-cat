@@ -1,13 +1,17 @@
 package com.mahmon.bookcat.model;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 // Class for handling requests to GoogleBooks
 public class GoogleApiRequest {
@@ -15,16 +19,16 @@ public class GoogleApiRequest {
     // String to store google api base string
     private static final String GOOGLE_URL_BASE = "https://www.googleapis.com/books/v1/volumes?q=isbn:";
 
-    // Interface used to get results out of createStringRequest below
+    // Interface used to get results out of getJSONObjectResult below
     public interface VolleyCallback {
-        void onSuccessResponse(String result);
+        void onSuccessResponse(JSONObject result) throws JSONException;
     }
 
     // Instance variable of this class
     private static GoogleApiRequest mInstance;
     // RequestQueue object
     private RequestQueue mRequestQueue;
-    // Contenxt variable
+    // Context variable
     private static Context mContext;
 
     // Private constructor
@@ -44,52 +48,32 @@ public class GoogleApiRequest {
         return mInstance;
     }
 
-    public void getStringResult(String isbnEntered, final VolleyCallback callback) {
+    // Method call for getting Google Books Api JSON result
+    public void getGoogleBookAsJSONObject(String isbnEntered, final VolleyCallback callback) {
         // Build the request string
         String url = GOOGLE_URL_BASE + isbnEntered;
         // Create string request and add listeners
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                     @Override
-                    // Response received, process it
-                    public void onResponse(String response) {
-                        // Do something with the response
-                        callback.onSuccessResponse(response);
+                    public void onResponse(JSONObject response) {
+                        // Pass the result to interface above
+                        try {
+                            callback.onSuccessResponse(response);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
-                },
-                // Error received
-                new Response.ErrorListener() {
+                }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // Handle error
+                        // Print volley error message
+                        String e = error.toString();
+                        Toast.makeText(mContext, e, Toast.LENGTH_LONG).show();
                     }
                 });
         // Call addToRequestQueue below, passing in the request
-        addToRequestQueue(stringRequest);
-    }
-
-    // Method to build String request (1861976127 < this works!!)
-    public void createStringRequest (String isbnEntered) {
-        // Build the request string
-        String url = GOOGLE_URL_BASE + isbnEntered;
-        // Create string request and add listeners
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    // Response received, process it
-                    public void onResponse(String response) {
-                        // Do something with the response
-                    }
-                },
-                // Error received
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // Handle error
-                    }
-                });
-        // Call addToRequestQueue below, passing in the request
-        addToRequestQueue(stringRequest);
+        addToRequestQueue(jsonObjectRequest);
     }
 
     // Method to instantiate a request queue
@@ -98,7 +82,7 @@ public class GoogleApiRequest {
             // Instantiate the queue and pass in the application context
             mRequestQueue = Volley.newRequestQueue(mContext.getApplicationContext());
         }
-        // Return the queueu
+        // Return the queue
         return mRequestQueue;
     }
 
