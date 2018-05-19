@@ -4,15 +4,16 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,19 +26,20 @@ import com.squareup.picasso.Picasso;
 
 import static com.mahmon.bookcat.Constants.BOOK_NODE;
 
-public class BookFragment extends Fragment {
+public class EditBookFragment extends Fragment {
 
     // Fragment context
     private Context mContext;
     // View elements
     private ImageView bookCover;
-    private TextView bookTitle;
-    private TextView bookAuthor;
+    private EditText bookTitle;
+    private EditText bookAuthor;
     private TextView bookIsbn;
-    private Button btnGotoLibrary;
-    private Button btnUpdateBook;
-    private Button btnDeleteBook;
-
+    private Button btnCancel;
+    private Button btnSaveUpdates;
+    // Current book values
+    private String currentTitle;
+    private String currentAuthor;
     // Firebase database
     private FirebaseDatabase mDatabase;
     private DatabaseReference mDatabaseRef;
@@ -49,7 +51,7 @@ public class BookFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Create fragViewLogin instance
-        View fragViewBook = inflater.inflate(R.layout.fragment_book, container, false);
+        View fragViewBook = inflater.inflate(R.layout.fragment_edit_book, container, false);
         // Get the context
         mContext = getContext();
         // Get the passed arguments
@@ -61,9 +63,8 @@ public class BookFragment extends Fragment {
         bookTitle = fragViewBook.findViewById(R.id.book_title);
         bookAuthor = fragViewBook.findViewById(R.id.book_author);
         bookIsbn = fragViewBook.findViewById(R.id.book_isbn);
-        btnGotoLibrary = fragViewBook.findViewById(R.id.btn_goto_library);
-        btnUpdateBook = fragViewBook.findViewById(R.id.btn_update_book);
-        btnDeleteBook = fragViewBook.findViewById(R.id.btn_delete_book);
+        btnCancel = fragViewBook.findViewById(R.id.btn_return_to_library);
+        btnSaveUpdates = fragViewBook.findViewById(R.id.btn_save_updates);
         // Get Firebase instance and database ref to book
         mDatabase = FirebaseDatabase.getInstance();
         mDatabaseRef = mDatabase.getReference()
@@ -78,8 +79,8 @@ public class BookFragment extends Fragment {
                 // Get book from database snapshot
                 Book book = dataSnapshot.getValue(Book.class);
                 // Use book to set text views for single book display
-                bookTitle.setText(book.getTitle());
-                bookAuthor.setText(book.getAuthor());
+                bookTitle.setHint(book.getTitle());
+                bookAuthor.setHint(book.getAuthor());
                 String displayISBN = "ISBN: " + book.getIsbn();
                 bookIsbn.setText(displayISBN);
                 // Use book to load cover into image view
@@ -88,6 +89,9 @@ public class BookFragment extends Fragment {
                         .load(imageUrl)
                         .fit().centerCrop()
                         .into(bookCover);
+                // Use book to set current values
+                currentTitle = book.getTitle();
+                currentAuthor = book.getAuthor();
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -97,29 +101,31 @@ public class BookFragment extends Fragment {
             }
         });
         // Set listener for button goto library
-        btnGotoLibrary.setOnClickListener(new View.OnClickListener() {
+        btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // Call goto catalogue method
-                gotoLibrary();
+                gotoBook(isbn, userUid);
             }
         });
 
-        // Set listener for button goto edit book
-        btnUpdateBook.setOnClickListener(new View.OnClickListener() {
+        // Set listener for button goto library
+        btnSaveUpdates.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Call goto catalogue method
-                gotoEditBook(isbn);
-            }
-        });
-
-        // Set listener for button delete book
-        btnDeleteBook.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Call delete book method
-                deleteBook(isbn);
+                // Get input from Edit text boxes
+                String editedTitle = bookTitle.getText().toString().trim();
+                String editedAuthor = bookAuthor.getText().toString().trim();
+                // Check title entered, if not use current title
+                if (TextUtils.isEmpty(editedTitle)) {
+                    editedTitle = currentTitle;
+                }
+                // Check author entered, if not use current author
+                if (TextUtils.isEmpty(editedAuthor)) {
+                    editedAuthor = currentAuthor;
+                }
+                // Call update book method
+                updateBook(editedTitle, editedAuthor);
             }
         });
         // Return the fragment view to the activity
@@ -127,46 +133,30 @@ public class BookFragment extends Fragment {
     }
 
     // Method called to delete books
-    private void deleteBook(final String isbnToDelete) {
-        mDatabaseRef.child(isbnToDelete).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                // Prompt user that book deleted
-                String deleteMsg = isbnToDelete + " has been removed from your library.";
-                Toast.makeText(mContext, deleteMsg, Toast.LENGTH_SHORT).show();
-                // Go to the library
-                gotoLibrary();
-            }
-        });
+    private void updateBook(String editedTitle, String editedAuthor) {
+        // Overwrite values with passed data
+        mDatabaseRef.child(isbn).child("title").setValue(editedTitle);
+        mDatabaseRef.child(isbn).child("author").setValue(editedAuthor);
+        Toast.makeText(mContext, "Book Updated", Toast.LENGTH_SHORT).show();
+        // Call goto catalogue method
+        gotoBook(isbn, userUid);
     }
 
-    // Switch fragments back to library view
-    public void gotoLibrary() {
-        // Create fragment transaction object
-        final FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        // Put the LibraryFragment into the fragment_container
-        fragmentTransaction.replace(R.id.fragment_container, new LibraryFragment());
-        // Don't add the fragment to the back stack (avois issues with back button)
-        fragmentTransaction.addToBackStack(null);
-        // Commit the transaction
-        fragmentTransaction.commit();
-    }
-
-    // Switch fragments back to library view
-    public void gotoEditBook(String isbn) {
+    // Method to create new fragment and replace in the fragment container
+    private void gotoBook(String isbn, String userUid) {
         // Create new BookFragment
-        EditBookFragment editBookFragment = new EditBookFragment();
+        BookFragment bookFragment = new BookFragment();
         // Create new data bundle
         Bundle bookData = new Bundle();
         // Store the isbn value and userUid in the data bundle
         bookData.putString(Constants.ISBN_KEY, isbn);
         bookData.putString(Constants.USER, userUid);
         // Add the bundle to the fragment
-        editBookFragment.setArguments(bookData);
+        bookFragment.setArguments(bookData);
         // Create fragment transaction object
         final FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         // Put the bookFragment into the fragment_container
-        fragmentTransaction.replace(R.id.fragment_container, editBookFragment);
+        fragmentTransaction.replace(R.id.fragment_container, bookFragment);
         // Don't add the fragment to the back stack (avoids issues with back button)
         fragmentTransaction.addToBackStack(null);
         // Commit the transaction

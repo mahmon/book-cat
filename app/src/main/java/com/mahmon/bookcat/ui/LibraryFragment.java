@@ -19,6 +19,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.mahmon.bookcat.Constants;
 import com.mahmon.bookcat.R;
 import com.mahmon.bookcat.model.Book;
 import com.mahmon.bookcat.model.BookAdapter;
@@ -121,8 +122,8 @@ public class LibraryFragment extends Fragment implements BookAdapter.OnItemClick
 
     @Override
     public void onItemClick(int position) {
-        //TODO - change this to a goto book method
-        gotoAddBook();
+        final Book clickedBook = booksList.get(position);
+        gotoBook(clickedBook.getIsbn(), userUid);
     }
 
     // Method to create new fragment and replace in the fragment container
@@ -132,6 +133,27 @@ public class LibraryFragment extends Fragment implements BookAdapter.OnItemClick
         // Put the RegisterFragment into the fragment_container
         fragmentTransaction.replace(R.id.fragment_container, new AddBookFragment());
         // Don't add the fragment to the back stack (avois issues with back button)
+        fragmentTransaction.addToBackStack(null);
+        // Commit the transaction
+        fragmentTransaction.commit();
+    }
+
+    // Method to create new fragment and replace in the fragment container
+    private void gotoBook(String isbn, String userUid) {
+        // Create new BookFragment
+        BookFragment bookFragment = new BookFragment();
+        // Create new data bundle
+        Bundle bookData = new Bundle();
+        // Store the isbn value and userUid in the data bundle
+        bookData.putString(Constants.ISBN_KEY, isbn);
+        bookData.putString(Constants.USER, userUid);
+        // Add the bundle to the fragment
+        bookFragment.setArguments(bookData);
+        // Create fragment transaction object
+        final FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        // Put the bookFragment into the fragment_container
+        fragmentTransaction.replace(R.id.fragment_container, bookFragment);
+        // Don't add the fragment to the back stack (avoids issues with back button)
         fragmentTransaction.addToBackStack(null);
         // Commit the transaction
         fragmentTransaction.commit();

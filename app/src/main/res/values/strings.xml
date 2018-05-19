@@ -25,4 +25,6 @@
     <string name="delete_book">Delete</string>
     <string name="update_book">Update Book</string>
     <string name="view_library">View Library</string>
+    <string name="cancel">Cancel</string>
+    <string name="save_updates">Save Updates</string>
 </resources>
