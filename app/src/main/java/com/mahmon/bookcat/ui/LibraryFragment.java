@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -38,6 +39,8 @@ public class LibraryFragment extends Fragment implements BookAdapter.OnItemClick
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager recyclerViewLayoutManager;
     private BookAdapter bookAdapter;
+    // No books text view
+    private TextView noBooksPrompt;
     // Firebase authorisation instance
     private FirebaseAuth mAuth;
     private String userUid;
@@ -62,6 +65,10 @@ public class LibraryFragment extends Fragment implements BookAdapter.OnItemClick
         bookAdapter = new BookAdapter(mContext, booksList);
         // Link to xml recycler_view
         recyclerView = fragViewCatalogue.findViewById(R.id.recycler_view);
+        // Link to no Books text prompt
+        noBooksPrompt = fragViewCatalogue.findViewById(R.id.no_books_prompt);
+        // Set invisible by default
+        noBooksPrompt.setVisibility(View.GONE);
         // Create 2 column grid for layout
         recyclerViewLayoutManager = new GridLayoutManager(mContext, 3);
         // Set the layout manager
@@ -96,7 +103,10 @@ public class LibraryFragment extends Fragment implements BookAdapter.OnItemClick
                     // Add the local Event to local list
                     booksList.add(book);
                 }
-                // Update Adapter every time
+                // If there are no books in the list show the no books prompt
+                if (booksList.isEmpty()) {
+                    noBooksPrompt.setVisibility(View.VISIBLE);
+                } // Update Adapter every time
                 bookAdapter.notifyDataSetChanged();
             }
             // Called if database cannot be reached
