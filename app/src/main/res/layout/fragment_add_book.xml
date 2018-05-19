@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <EditText
-        android:id="@+id/book_isbn"
+        android:id="@+id/book_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"

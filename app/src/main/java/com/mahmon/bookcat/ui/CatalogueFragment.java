@@ -10,13 +10,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.mahmon.bookcat.R;
 import com.mahmon.bookcat.model.Book;
 import com.mahmon.bookcat.model.BookAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.mahmon.bookcat.Constants.BOOK_NODE;
+import static com.mahmon.bookcat.Constants.USERS_NODE;
 
 public class CatalogueFragment extends Fragment {
 
@@ -26,6 +37,13 @@ public class CatalogueFragment extends Fragment {
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager recyclerViewLayoutManager;
     private BookAdapter bookAdapter;
+    // Firebase authorisation instance
+    private FirebaseAuth mAuth;
+    private String userUid;
+    // Variables for Firebase connections
+    private DatabaseReference mDatabaseRef;
+    // Listener variable used to kill listener
+    private ValueEventListener mDBListener;
     // Book Array
     private List<Book> booksList;
     // Bottom button
@@ -49,6 +67,45 @@ public class CatalogueFragment extends Fragment {
         recyclerView.setLayoutManager(recyclerViewLayoutManager);
         // Set the adapter
         recyclerView.setAdapter(bookAdapter);
+        // Initialise Firebase authorisation instance
+        mAuth = FirebaseAuth.getInstance();
+        // Get signed in user details
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        userUid = currentUser.getUid();
+
+        // Get Firebase database reference for users node
+        mDatabaseRef = FirebaseDatabase.getInstance()
+                .getReference(USERS_NODE)
+                .child(userUid)
+                .child(BOOK_NODE);
+        // Instantiate database listener
+        mDBListener = mDatabaseRef.addValueEventListener(new ValueEventListener() {
+            // Method called on activity load and on any data changes
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Clear local list every time to prevent duplicate entry
+                booksList.clear();
+                // For loop to iterate through database
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    // Store each Book in a local Book Object
+                    Book book = postSnapshot.getValue(Book.class);
+                    // Get book node key from database and set it to local event
+                    book.setIsbn(postSnapshot.getKey());
+                    // Add the local Event to local list
+                    booksList.add(book);
+                }
+                // Update Adapter every time
+                bookAdapter.notifyDataSetChanged();
+            }
+            // Called if database cannot be reached
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Display the error message
+                Toast.makeText(mContext,
+                        databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
         // Link to the button
         btnAddBook = fragViewCatalogue.findViewById(R.id.btn_add_book);
         // Add listener for button
@@ -58,8 +115,6 @@ public class CatalogueFragment extends Fragment {
                 gotoAddBook();
             }
         });
-        /*DUMMY DATA*/
-        prepareBookData();
         // Return the fragment view to the container
         return fragViewCatalogue;
     }
@@ -74,14 +129,6 @@ public class CatalogueFragment extends Fragment {
         fragmentTransaction.addToBackStack(null);
         // Commit the transaction
         fragmentTransaction.commit();
-    }
-
-    /* Create dummy book data to test recycler view */
-    private void prepareBookData() {
-        Book book1 = new Book("9780066238500", "Great Expextations", "Charles Dickens", "imageURL");
-        booksList.add(book1);
-        // Update the adapter
-        bookAdapter.notifyDataSetChanged();
     }
 
 }

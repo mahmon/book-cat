@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.mahmon.bookcat.Constants;
 import com.mahmon.bookcat.R;
 import com.mahmon.bookcat.model.Book;
+import com.squareup.picasso.Picasso;
 
 import static com.mahmon.bookcat.Constants.BOOK_NODE;
 
@@ -27,6 +29,7 @@ public class BookFragment extends Fragment {
     // Fragment context
     private Context mContext;
     // View elements
+    private ImageView bookCover;
     private TextView bookTitle;
     private TextView bookAuthor;
     private TextView bookIsbn;
@@ -34,13 +37,10 @@ public class BookFragment extends Fragment {
     // Firebase database
     private FirebaseDatabase mDatabase;
     private DatabaseReference mDatabaseRef;
-    private ValueEventListener mDatabaseListener;
     // Signed in user ID
     private String userUid;
     // String to isbn data
     private String isbn;
-    // Single book object
-    private Book book;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -53,6 +53,7 @@ public class BookFragment extends Fragment {
         isbn = bookData.getString(Constants.ISBN_KEY);
         userUid = bookData.getString(Constants.USER);
         // Link to view items
+        bookCover = fragViewBook.findViewById(R.id.book_cover);
         bookTitle = fragViewBook.findViewById(R.id.book_title);
         bookAuthor = fragViewBook.findViewById(R.id.book_author);
         bookIsbn = fragViewBook.findViewById(R.id.book_isbn);
@@ -64,25 +65,35 @@ public class BookFragment extends Fragment {
                 .child(userUid)
                 .child(BOOK_NODE)
                 .child(isbn);
-
         // Get book from database
         // Instantiate database listener
         mDatabaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                book = dataSnapshot.getValue(Book.class);
+                // Get book from database snapshot
+                Book book = dataSnapshot.getValue(Book.class);
+                // Use book to set text views for single book display
+                bookTitle.setText(book.getTitle());
+                bookAuthor.setText(book.getAuthor());
+                String displayISBN = "ISBN: " + book.getIsbn();
+                bookIsbn.setText(displayISBN);
+
+
+                // Use book to load cover into image view
+                String imageUrl = book.getCoverImageURL();
+                Picasso.with(mContext)
+                        .load(imageUrl)
+                        .fit().centerCrop()
+                        .into(bookCover);
+
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                // Display the error message
+                Toast.makeText(mContext,
+                        databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
-        // Set the view text
-        bookTitle.setText(book.getTitle());
-        //bookAuthor.setText(book.getAuthor());
-        //bookIsbn.setText(book.getIsbn());
-
         // Set listener for button
         btnGotoCatalogue.setOnClickListener(new View.OnClickListener() {
             @Override

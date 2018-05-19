@@ -68,7 +68,7 @@ public class AddBookFragment extends Fragment {
         mDatabase = FirebaseDatabase.getInstance();
         mDatabaseRef = mDatabase.getReference().child(Constants.USERS_NODE);
         // Link to view elements
-        bookIsbn = fragViewAddBook.findViewById(R.id.book_isbn);
+        bookIsbn = fragViewAddBook.findViewById(R.id.book_title);
         btnAddBook = fragViewAddBook.findViewById(R.id.btn_add_book);
         // Attach listener to the button
         btnAddBook.setOnClickListener(new View.OnClickListener() {

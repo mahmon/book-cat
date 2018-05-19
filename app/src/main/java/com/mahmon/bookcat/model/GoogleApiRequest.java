@@ -9,15 +9,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.mahmon.bookcat.Constants;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 // Class for handling requests to GoogleBooks
 public class GoogleApiRequest {
-
-    // String to store google api base string
-    private static final String GOOGLE_URL_BASE = "https://www.googleapis.com/books/v1/volumes?q=isbn:";
 
     // Interface used to get results out of getJSONObjectResult below
     public interface VolleyCallback {
@@ -51,7 +49,7 @@ public class GoogleApiRequest {
     // Method call for getting Google Books Api JSON result
     public void getGoogleBookAsJSONObject(String isbnEntered, final VolleyCallback callback) {
         // Build the request string
-        String url = GOOGLE_URL_BASE + isbnEntered;
+        String url = Constants.GOOGLE_URL_BASE + isbnEntered;
         // Create string request and add listeners
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {

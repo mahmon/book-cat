@@ -2,8 +2,6 @@ package com.mahmon.bookcat.model;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mahmon.bookcat.R;
-import com.mahmon.bookcat.ui.BookFragment;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -29,13 +26,13 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
         private CardView cardView;
         public TextView title;
         public TextView isbn;
-        public ImageView thumbnail;
+        public ImageView coverImage;
 
         public MyViewHolder(View view) {
             super(view);
             cardView = view.findViewById(R.id.card_view);
-            title = view.findViewById(R.id.book_isbn);
-            thumbnail = view.findViewById(R.id.book_thumbnail);
+            title = view.findViewById(R.id.book_title);
+            coverImage = view.findViewById(R.id.book_cover_image);
         }
 
     }
@@ -65,12 +62,11 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
             }
         });
         // Load image into card view
-        String isbn = book.getIsbn();
-        String imageUrl = "http://covers.openlibrary.org/b/isbn/" + isbn + ".jpg";
+        String imageUrl = book.getCoverImageURL();
         Picasso.with(mContext)
                 .load(imageUrl)
                 .fit().centerCrop()
-                .into(holder.thumbnail);
+                .into(holder.coverImage);
     }
 
     @Override

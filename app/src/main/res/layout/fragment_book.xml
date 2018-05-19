@@ -16,13 +16,15 @@
 
     <TextView
         android:id="@+id/book_title"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:padding="8dp"
         android:text="@string/title"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/book_cover"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -49,7 +51,7 @@
         android:id="@+id/tool_bar_bottom"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:background="@drawable/background_toolbar_translucent"
+        android:background="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
