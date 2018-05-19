@@ -29,7 +29,7 @@ import java.util.List;
 import static com.mahmon.bookcat.Constants.BOOK_NODE;
 import static com.mahmon.bookcat.Constants.USERS_NODE;
 
-public class CatalogueFragment extends Fragment {
+public class LibraryFragment extends Fragment {
 
     // Fragment context
     private Context mContext;
@@ -52,7 +52,7 @@ public class CatalogueFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Create fragViewLogin instance
-        View fragViewCatalogue = inflater.inflate(R.layout.fragment_catalogue, container, false);
+        View fragViewCatalogue = inflater.inflate(R.layout.fragment_library, container, false);
         // Get context
         mContext = getContext();
         // Instantiate books array

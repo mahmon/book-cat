@@ -22,4 +22,7 @@
     <string name="view_catalogue">View Catalogue</string>
     <string name="look_up_book">Look Up Book</string>
     <string name="find_book_and_save_to_library">Find book and save to library</string>
+    <string name="delete_book">Delete</string>
+    <string name="update_book">Update Book</string>
+    <string name="view_library">View Library</string>
 </resources>

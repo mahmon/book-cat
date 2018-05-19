@@ -9,9 +9,9 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.mahmon.bookcat.ui.CatalogueFragment;
+import com.mahmon.bookcat.ui.LibraryFragment;
 
-public class CatalogueActivity extends AppCompatActivity {
+public class LibraryActivity extends AppCompatActivity {
 
     // Firebase authorisation instance
     private FirebaseAuth mAuth;
@@ -24,12 +24,12 @@ public class CatalogueActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Set the view to activity_main.xml
-        setContentView(R.layout.activity_catalogue);
+        setContentView(R.layout.activity_library);
         // Create a fragment manager instance
-        CatalogueFragment catalogueFragment = new CatalogueFragment();
+        LibraryFragment libraryFragment = new LibraryFragment();
         // Load the loginFragment into fragment_container
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, catalogueFragment).commit();
+                .add(R.id.fragment_container, libraryFragment).commit();
         // Assign view elements
         toolbarTop = findViewById(R.id.tool_bar_top);
         userName = findViewById(R.id.logged_in_user_name);

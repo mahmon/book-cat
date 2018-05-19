@@ -21,7 +21,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.mahmon.bookcat.CatalogueActivity;
+import com.mahmon.bookcat.LibraryActivity;
 import com.mahmon.bookcat.R;
 
 public class LoginFragment extends Fragment {
@@ -137,7 +137,7 @@ public class LoginFragment extends Fragment {
     // Method to create new fragment and replace in the fragment container
     public void gotoCatalogueScreen() {
         // Instantiate new intent to start DisplayEventsActivity
-        Intent intent = new Intent(getContext(), CatalogueActivity.class);
+        Intent intent = new Intent(getContext(), LibraryActivity.class);
         // Start Activity
         startActivity(intent);
     }

@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,7 +34,10 @@ public class BookFragment extends Fragment {
     private TextView bookTitle;
     private TextView bookAuthor;
     private TextView bookIsbn;
-    private Button btnGotoCatalogue;
+    private Button btnGotoLibrary;
+    private Button btnUpdateBook;
+    private Button btnDeleteBook;
+
     // Firebase database
     private FirebaseDatabase mDatabase;
     private DatabaseReference mDatabaseRef;
@@ -57,17 +61,18 @@ public class BookFragment extends Fragment {
         bookTitle = fragViewBook.findViewById(R.id.book_title);
         bookAuthor = fragViewBook.findViewById(R.id.book_author);
         bookIsbn = fragViewBook.findViewById(R.id.book_isbn);
-        btnGotoCatalogue = fragViewBook.findViewById(R.id.btn_goto_catalogue);
+        btnGotoLibrary = fragViewBook.findViewById(R.id.btn_goto_library);
+        btnUpdateBook = fragViewBook.findViewById(R.id.btn_update_book);
+        btnDeleteBook = fragViewBook.findViewById(R.id.btn_delete_book);
         // Get Firebase instance and database ref to book
         mDatabase = FirebaseDatabase.getInstance();
         mDatabaseRef = mDatabase.getReference()
                 .child(Constants.USERS_NODE)
                 .child(userUid)
-                .child(BOOK_NODE)
-                .child(isbn);
+                .child(BOOK_NODE);
         // Get book from database
         // Instantiate database listener
-        mDatabaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabaseRef.child(isbn).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Get book from database snapshot
@@ -77,15 +82,12 @@ public class BookFragment extends Fragment {
                 bookAuthor.setText(book.getAuthor());
                 String displayISBN = "ISBN: " + book.getIsbn();
                 bookIsbn.setText(displayISBN);
-
-
                 // Use book to load cover into image view
                 String imageUrl = book.getCoverImageURL();
                 Picasso.with(mContext)
                         .load(imageUrl)
                         .fit().centerCrop()
                         .into(bookCover);
-
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -94,24 +96,50 @@ public class BookFragment extends Fragment {
                         databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-        // Set listener for button
-        btnGotoCatalogue.setOnClickListener(new View.OnClickListener() {
+        // Set listener for button goto library
+        btnGotoLibrary.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // Call goto catalogue method
-                gotoCatalogue();
+                gotoLibrary();
             }
         });
+
+        // TODO set listener for update book
+
+        // Set listener for button goto library
+        btnDeleteBook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Call delete book method
+                deleteBook(isbn);
+            }
+        });
+
         // Return the fragment view to the activity
         return fragViewBook;
     }
 
-    // Switch fragments back to catalogue view
-    public void gotoCatalogue() {
+    // Method called to delete books
+    private void deleteBook(final String isbnToDelete) {
+        mDatabaseRef.child(isbnToDelete).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                // Prompt user that book deleted
+                String deleteMsg = isbnToDelete + " has been removed from your library.";
+                Toast.makeText(mContext, deleteMsg, Toast.LENGTH_SHORT).show();
+                // Go to the library
+                gotoLibrary();
+            }
+        });
+    }
+
+    // Switch fragments back to library view
+    public void gotoLibrary() {
         // Create fragment transaction object
         final FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        // Put the CatalogueFragment into the fragment_container
-        fragmentTransaction.replace(R.id.fragment_container, new CatalogueFragment());
+        // Put the LibraryFragment into the fragment_container
+        fragmentTransaction.replace(R.id.fragment_container, new LibraryFragment());
         // Don't add the fragment to the back stack (avois issues with back button)
         fragmentTransaction.addToBackStack(null);
         // Commit the transaction
