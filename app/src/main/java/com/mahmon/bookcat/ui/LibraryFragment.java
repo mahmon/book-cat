@@ -29,7 +29,7 @@ import java.util.List;
 import static com.mahmon.bookcat.Constants.BOOK_NODE;
 import static com.mahmon.bookcat.Constants.USERS_NODE;
 
-public class LibraryFragment extends Fragment {
+public class LibraryFragment extends Fragment implements BookAdapter.OnItemClickListener {
 
     // Fragment context
     private Context mContext;
@@ -42,7 +42,7 @@ public class LibraryFragment extends Fragment {
     private String userUid;
     // Variables for Firebase connections
     private DatabaseReference mDatabaseRef;
-    // Listener variable used to kill listener
+    // Listener variable
     private ValueEventListener mDBListener;
     // Book Array
     private List<Book> booksList;
@@ -67,12 +67,13 @@ public class LibraryFragment extends Fragment {
         recyclerView.setLayoutManager(recyclerViewLayoutManager);
         // Set the adapter
         recyclerView.setAdapter(bookAdapter);
+        // Attach Click listener to BookAdapter
+        bookAdapter.setOnItemClickListener(LibraryFragment.this);
         // Initialise Firebase authorisation instance
         mAuth = FirebaseAuth.getInstance();
         // Get signed in user details
         FirebaseUser currentUser = mAuth.getCurrentUser();
         userUid = currentUser.getUid();
-
         // Get Firebase database reference for users node
         mDatabaseRef = FirebaseDatabase.getInstance()
                 .getReference(USERS_NODE)
@@ -105,7 +106,6 @@ public class LibraryFragment extends Fragment {
                         databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
         // Link to the button
         btnAddBook = fragViewCatalogue.findViewById(R.id.btn_add_book);
         // Add listener for button
@@ -117,6 +117,12 @@ public class LibraryFragment extends Fragment {
         });
         // Return the fragment view to the container
         return fragViewCatalogue;
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        //TODO - change this to a goto book method
+        gotoAddBook();
     }
 
     // Method to create new fragment and replace in the fragment container
