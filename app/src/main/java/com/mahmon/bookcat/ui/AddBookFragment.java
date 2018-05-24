@@ -176,6 +176,8 @@ public class AddBookFragment extends Fragment {
                 // Call method to save book to user library
                 saveBookToUserLibrary(isbn, title, author, coverImageURL);
             }
+
+
         });
     }
 
