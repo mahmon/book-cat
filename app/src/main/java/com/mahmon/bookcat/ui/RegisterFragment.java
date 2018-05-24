@@ -24,11 +24,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.mahmon.bookcat.R;
 
+import static com.mahmon.bookcat.Constants.USERS_NODE;
+import static com.mahmon.bookcat.Constants.NAME_KEY;
+
 public class RegisterFragment extends Fragment {
 
-    // Node to store users under
-    private static final String USERSNODE = "Users";
-    private static final String NAMENODE = "Name";
     // Firebase database
     private FirebaseDatabase mDatabase;
     private DatabaseReference mDatabaseRef;
@@ -40,24 +40,28 @@ public class RegisterFragment extends Fragment {
     private EditText userPassword;
     private EditText userPassConf;
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(   @NonNull LayoutInflater inflater,
+                                @Nullable ViewGroup container,
+                                @Nullable Bundle savedInstanceState) {
         // Create fragViewRegister instance
-        View fragViewRegister = inflater.inflate(R.layout.fragment_register, container, false);
+        View fragViewRegister = inflater.inflate(R.layout.fragment_register,
+                container, false);
         // Initialise Firebase authorisation instance
         mAuth = FirebaseAuth.getInstance();
         // Sign out any logged in user
         mAuth.signOut();
         // Get Firebase instance and database ref
         mDatabase = FirebaseDatabase.getInstance();
-        mDatabaseRef = mDatabase.getReference().child(USERSNODE);
+        mDatabaseRef = mDatabase.getReference().child(USERS_NODE);
         // Link to view elements
         userName = fragViewRegister.findViewById(R.id.user_name);
         userEmail = fragViewRegister.findViewById(R.id.user_email);
         userPassword = fragViewRegister.findViewById(R.id.user_password);
         userPassConf = fragViewRegister.findViewById(R.id.user_pass_conf);
         Button btnRegisterUser = fragViewRegister.findViewById(R.id.btn_register);
-        // Attach listener to the button
+        // Attach listener to the register user button
         btnRegisterUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,39 +80,45 @@ public class RegisterFragment extends Fragment {
 
     // Method to register user with Firebase authentication
     public void registerUser() {
-        // Get name, email and password from EditTExt boxes
+        // Get name, email and password from EditText boxes
         final String name = userName.getText().toString().trim();
         final String email = userEmail.getText().toString().trim();
         final String password = userPassword.getText().toString().trim();
         final String passConf = userPassConf.getText().toString().trim();
-        // Check name entered
+        // TEST: Check name entered
         if (TextUtils.isEmpty(name)) {
             // If not prompt user
-            Toast.makeText(getContext(), "Enter name", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(),
+                    "Enter name", Toast.LENGTH_SHORT).show();
             return;
         }
-        // Check email entered
+        // TEST: Check email entered
         if (TextUtils.isEmpty(email)) {
             // If not prompt user
-            Toast.makeText(getContext(), "Enter email address", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(),
+                    "Enter email address", Toast.LENGTH_SHORT).show();
             return;
         }
-        // Check password entered
+        // TEST: Check password entered
         if (TextUtils.isEmpty(password)) {
             // If not prompt user
-            Toast.makeText(getContext(), "Enter password", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(),
+                    "Enter password", Toast.LENGTH_SHORT).show();
             return;
         }
-        // Check password is at least 6 characters long
+        // TEST: Check password is at least 6 characters long
         if (password.length() < 6) {
             // If not prompt user
-            Toast.makeText(getContext(), "Password too short, enter minimum 6 characters", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(),
+                    "Password too short, enter minimum 6 characters",
+                    Toast.LENGTH_SHORT).show();
             return;
         }
-        // Check both passwords entered match
+        // TEST: Check both passwords entered match
         if (!password.equals(passConf)) {
             // If not prompt user
-            Toast.makeText(getContext(), "Passwords do not match", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(),
+                    "Passwords do not match", Toast.LENGTH_SHORT).show();
             return;
         }
         // Create and register user with email address and password
@@ -122,34 +132,38 @@ public class RegisterFragment extends Fragment {
                             // Get the current user (just created and logged in automatically)
                             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                             // Update the user profile
-                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                            UserProfileChangeRequest profileUpdates =
+                                    new UserProfileChangeRequest.Builder()
                                     // Set their display name
                                     .setDisplayName(name)
                                     .build();
-                            // Run the updates
+                            // Run the update to store their display name
                             user.updateProfile(profileUpdates);
                             // Create entry in database
+                            // and store their display name there as well
                             String userID = user.getUid();
-                            mDatabaseRef.child(userID).child(NAMENODE).setValue(name);
+                            mDatabaseRef.child(userID).child(NAME_KEY).setValue(name);
                             // Sign in success
-                            Toast.makeText(getContext(), "Sign up success, please login", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(),
+                                    "Sign up success, please login",
+                                    Toast.LENGTH_LONG).show();
                             // Call the newUserRegistered method
                             newUserRegistered(user);
                         }
                     }
                 // Add on failure listener, called if sign up fails
                 }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                // Get details of the failure error
-                String error = e.getLocalizedMessage();
-                // If sign up fails, display a message to the user.
-                Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Get details of the failure error
+                        String error = e.getLocalizedMessage();
+                        // If sign up fails, display a message to the user.
+                        Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    // Method to react if user is logged in
+    // Method called when new user is registered
     private void newUserRegistered(FirebaseUser user) {
         // If the user is logged in
         if (user != null) {
@@ -163,7 +177,8 @@ public class RegisterFragment extends Fragment {
     // Method to create new fragment and replace in the fragment container
     public void gotoLoginScreen() {
         // Create fragment transaction object
-        final FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        final FragmentTransaction fragmentTransaction =
+                getFragmentManager().beginTransaction();
         // Put the LoginFragment into the fragment_container
         fragmentTransaction.replace(R.id.fragment_container, new LoginFragment());
         // Don't add the fragment to the back stack (avoids issues with back button)

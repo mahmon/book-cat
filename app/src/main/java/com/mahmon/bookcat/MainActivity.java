@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.mahmon.bookcat.ui.LoginFragment;
 
+// Main activity class, entry point for the application
 public class MainActivity extends AppCompatActivity {
 
     @Override

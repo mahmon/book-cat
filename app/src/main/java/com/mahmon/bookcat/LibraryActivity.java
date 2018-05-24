@@ -15,6 +15,8 @@ public class LibraryActivity extends AppCompatActivity {
 
     // Firebase authorisation instance
     private FirebaseAuth mAuth;
+    private FirebaseUser mUser;
+    private String mUserName;
     // View elements
     private Toolbar toolbarTop;
     private TextView userName;
@@ -23,11 +25,11 @@ public class LibraryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Set the view to activity_main.xml
+        // Set the view to activity_library.xml
         setContentView(R.layout.activity_library);
         // Create a fragment manager instance
         LibraryFragment libraryFragment = new LibraryFragment();
-        // Load the loginFragment into fragment_container
+        // Load the libraryFragment into fragment_container
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_container, libraryFragment).commit();
         // Assign view elements
@@ -36,19 +38,28 @@ public class LibraryActivity extends AppCompatActivity {
         signOut = findViewById(R.id.sign_out);
         // Set up top toolbar
         setSupportActionBar(toolbarTop);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        // Test (nullPointerException): make sure a toolbar has been instantiated
+        if (getSupportActionBar()!= null) {
+            // Stop toolbar showing default app title
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+        }
         // Initialise Firebase authorisation instance
         mAuth = FirebaseAuth.getInstance();
         // Get signed in user details
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        String name = currentUser.getDisplayName();
-        // Set user name
-        String message = "Signed in as: " + name;
+        mUser = mAuth.getCurrentUser();
+        // Test (nullPointerException): make sure a toolbar has been instantiated
+        if (mUser != null) {
+            // Get display name for signed in user
+            mUserName = mUser.getDisplayName();
+        }
+        // Display user name at top of app
+        String message = "Signed in as: " + mUserName;
         userName.setText(message);
-        // Add listener for sign out
+        // Add listener for clicks on sign out text
         signOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Call signOut method below
                 signOut();
             }
         });
@@ -56,7 +67,9 @@ public class LibraryActivity extends AppCompatActivity {
 
     // Sign out method
     public void signOut() {
+        // Call Firebase authorisation signOut method on mAuth
         mAuth.signOut();
+        // CAll gotoLoginScreen method below
         gotoLoginScreen();
     }
 

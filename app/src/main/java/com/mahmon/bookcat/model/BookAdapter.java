@@ -15,36 +15,41 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+// Class used to adapt book list data into recycler view
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> {
 
     // Context variable to pass the context
     private Context mContext;
-    // List to hold the books
+    // Book list array to hold the books
     private List<Book> booksList;
-    // Click listener object
+    // Click listener object for clicks on list items
     private OnItemClickListener mListener;
 
-    // Constructor, passes conetext and book list
+    // Constructor, passes context and book list
     public BookAdapter(Context mContext, List<Book> booksList) {
         this.mContext = mContext;
         this.booksList = booksList;
     }
 
     // Override method to create ViewHolder
+    @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        // Instantiate new view and inflate an event item
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // Instantiate new view and inflate the bookCardView item
         View itemView = LayoutInflater.from(mContext)
                 .inflate(R.layout.book_cat_cardview, parent, false);
+        // Return a new instance of the view holder
         return new MyViewHolder(itemView);
     }
 
     // Override method to bind data to ViewHolder
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+        // Instantiate book from the book at 'position' in the book list
         Book book = booksList.get(position);
+        // Set the title of the holder to the book title
         holder.title.setText(book.getTitle());
-        // Load image into card view
+        // Use Picasso to load image into card view using getter method from book
         String imageUrl = book.getCoverImageURL();
         Picasso.with(mContext)
                 .load(imageUrl)
@@ -52,12 +57,13 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
                 .into(holder.coverImage);
     }
 
+    // Method to get length of book list
     @Override
     public int getItemCount() {
         return booksList.size();
     }
 
-    // ImageViewHolder class, implements Listener
+    // Inner class - ImageViewHolder, extends the view holder and implements Listener
     public class MyViewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
 
@@ -70,19 +76,24 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
         // Constructor
         public MyViewHolder(View view) {
             super(view);
+            // Link variables to xml view
             cardView = view.findViewById(R.id.card_view);
             title = view.findViewById(R.id.book_title);
             coverImage = view.findViewById(R.id.book_cover_image);
-            // Set the onClickListener
+            // Assign the onClickListener to this view
             view.setOnClickListener(this);
         }
 
-        // Get book position
+        // Method called when Book is clicked in view
         @Override
         public void onClick(View v) {
+            // TEST: if the listener is assigned (not null)
             if (mListener != null) {
+                // Get the position of the book clicked
                 int position = getAdapterPosition();
+                // TEST: If the value position is not null
                 if (position != RecyclerView.NO_POSITION) {
+                    // Call onItemClick on the position
                     mListener.onItemClick(position);
                 }
             }
@@ -92,11 +103,12 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
 
     // Interface, allows click methods to be set outside of this Adapter
     public interface OnItemClickListener {
-        // Contract to require @Override onItemClick method
+        // Contract to requires @Override onItemClick method
+        // in class that implements the adapter
         void onItemClick(int position);
     }
 
-    // Attach listener to mListener
+    // Attach mListener when this method is called
     public void setOnItemClickListener(OnItemClickListener listener) {
         mListener = listener;
     }

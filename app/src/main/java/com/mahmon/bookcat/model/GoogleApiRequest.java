@@ -14,7 +14,7 @@ import com.mahmon.bookcat.Constants;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-// Class for handling requests to GoogleBooks
+// Class for handling requests to the GoogleBooks API
 public class GoogleApiRequest {
 
     // Interface used to get results out of getJSONObjectResult below
@@ -22,14 +22,14 @@ public class GoogleApiRequest {
         void onSuccessResponse(JSONObject result) throws JSONException;
     }
 
-    // Instance variable of this class
+    // Variable for getting an instance of this class
     private static GoogleApiRequest mInstance;
     // RequestQueue object
-    private RequestQueue mRequestQueue;
+    private static RequestQueue mRequestQueue;
     // Context variable
     private static Context mContext;
 
-    // Private constructor
+    // Private constructor, instantiates request queue
     private GoogleApiRequest(Context context) {
         mContext = context;
         // Instantiate a request queue
@@ -38,8 +38,10 @@ public class GoogleApiRequest {
 
     // Public method to get an instance of GoogleApiRequest
     public static synchronized GoogleApiRequest getInstance(Context context) {
-        // Pass in a context and instantiate
+        // Pass in a context and instantiate with private constructor
+        // TEST: Check that an instance has not already been assigned
         if (mInstance == null) {
+            // Assign the new GoogleApiRequest instance to mInstance
             mInstance = new GoogleApiRequest(context);
         }
         // Return the instance
@@ -48,9 +50,10 @@ public class GoogleApiRequest {
 
     // Method call for getting Google Books Api JSON result
     public void getGoogleBookAsJSONObject(String isbnEntered, final VolleyCallback callback) {
-        // Build the request string
+        // Build the request string using the isbn entered by user
         String url = Constants.GOOGLE_URL_BASE + isbnEntered;
-        // Create string request and add listeners
+        // Create JSON object request and add listeners
+        // (Google books stores books as JSON object, much like firebase)
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                     @Override
@@ -62,10 +65,11 @@ public class GoogleApiRequest {
                             e.printStackTrace();
                         }
                     }
+                // Listen for any errors in response
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // Print volley error message
+                        // Print volley error message as toast
                         String e = error.toString();
                         Toast.makeText(mContext, e, Toast.LENGTH_LONG).show();
                     }
@@ -76,6 +80,7 @@ public class GoogleApiRequest {
 
     // Method to instantiate a request queue
     public RequestQueue getRequestQueue() {
+        // TEST: Check mRequestQueue has been assigned
         if (mRequestQueue == null) {
             // Instantiate the queue and pass in the application context
             mRequestQueue = Volley.newRequestQueue(mContext.getApplicationContext());
