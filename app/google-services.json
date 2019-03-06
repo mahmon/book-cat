@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "281771513193",
+    "firebase_url": "https://bookcat-da666.firebaseio.com",
+    "project_id": "bookcat-da666",
+    "storage_bucket": "bookcat-da666.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:281771513193:android:ce31ca6782831d24",
+        "android_client_info": {
+          "package_name": "com.mahmon.bookcat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "281771513193-lf0fjvofvc0j5v6j4r1ukppc4g4aqr0n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mahmon.bookcat",
+            "certificate_hash": "2d34bf6e3282550ca1d74a3985a89d8358be9959"
+          }
+        },
+        {
+          "client_id": "281771513193-63ishsahlkimpqfich6gg6gftts0rdg1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mahmon.bookcat",
+            "certificate_hash": "6b9545ad758fe1a5e55bafeeb553ad4fa1295422"
+          }
+        },
+        {
+          "client_id": "281771513193-1g85v5nmnrfp6srp64qp38nduu3fiu81.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqp2ACoNptzOB6TqFBeYTsxjMfMSteM3U"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "281771513193-1g85v5nmnrfp6srp64qp38nduu3fiu81.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

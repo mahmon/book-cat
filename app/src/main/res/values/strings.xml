@@ -1,3 +1,31 @@
 <resources>
     <string name="app_name">BookCat</string>
+    <string name="email_address">email address</string>
+    <string name="password">password</string>
+    <string name="bookcat">BookCat</string>
+    <string name="login">login</string>
+    <string name="create_account">create account</string>
+    <string name="login_screen">login screen</string>
+    <string name="main_activity">Main Activity</string>
+    <string name="register_account_screen">register account screen</string>
+    <string name="name">name</string>
+    <string name="register">register</string>
+    <string name="re_enter_password">re-enter password</string>
+    <string name="no_account_click_here">No account? Click here.</string>
+    <string name="logo">Logo</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="add_book">Add Book</string>
+    <string name="save_book">Save Book</string>
+    <string name="author">author</string>
+    <string name="title">title</string>
+    <string name="isbn">isbn</string>
+    <string name="view_catalogue">View Catalogue</string>
+    <string name="look_up_book">Look Up Book</string>
+    <string name="find_book_and_save_to_library">Find book and save to library</string>
+    <string name="delete_book">Delete</string>
+    <string name="update_book">Update Book</string>
+    <string name="view_library">View Library</string>
+    <string name="cancel">Cancel</string>
+    <string name="save_updates">Save Updates</string>
+    <string name="your_library_is_empty">Your library is empty</string>
 </resources>
