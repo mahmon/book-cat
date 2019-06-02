@@ -16,7 +16,7 @@ The app was written in Java / XML using Android Studio and also used an API to r
 ### Main features in action
 Create | Read | Update
 --- | --- | ---
-![Store book](https://github.com/mahmon/visual-timetable-app/blob/master/gifs/create.gif "Create event") | ![View library](https://github.com/mahmon/visual-timetable-app/blob/master/gifs/read.gif "Read event") | ![Update / Delete books](https://github.com/mahmon/visual-timetable-app/blob/master/gifs/update.gif "Update event")
+![Store book](https://github.com/mahmon/book-cat/blob/master/gifs/create.gif "Store book") | ![View library](https://github.com/mahmon/book-cat/blob/master/gifs/read.gif "View book") | ![Update / Delete books](https://github.com/mahmon/book-cat/blob/master/gifs/update-delete.gif "Update / delete book")
 
 ### Google Books API
 For extra credit I built the app to populate all the details of the users books automatically, including cover artwork, by taking just one input field - an ISBN number - and using that to query the Google Books API to retrieve the book cover, title and author.
