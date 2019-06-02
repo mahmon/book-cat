@@ -14,7 +14,7 @@ The app was written in Java / XML using Android Studio and also used an API to r
 - Book details can be manually entered / updated if required
 
 ### Main features in action
-Create | Read | Update
+Create | Read | Update / Delete
 --- | --- | ---
 ![Store book](https://github.com/mahmon/book-cat/blob/master/gifs/create.gif "Store book") | ![View library](https://github.com/mahmon/book-cat/blob/master/gifs/read.gif "View book") | ![Update / Delete books](https://github.com/mahmon/book-cat/blob/master/gifs/update-delete.gif "Update / delete book")
 
