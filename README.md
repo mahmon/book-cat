@@ -2,6 +2,10 @@
 
 **An android application for organising a personal book collection**
 
+[![Development Status](https://img.shields.io/badge/development_status-project_completed-green.svg)](https://github.com/mahmon/book-cat)
+
+---
+
 This Android app was developed as part of my final year studies in a BSc in Computing and Internet Technologies. The aim of the project was to demonstrate my ability to build an app that featured a CRUD system; i.e an application that could create, read, update and delete records in a database. I achieved the project aim by creating 'BookCat', an app designed to allow users to record the details of their personal book collection.
 
 The app was written in Java / XML using Android Studio and also used an API to retrieve a JSON result.
@@ -23,4 +27,4 @@ For extra credit I built the app to populate all the details of the users books 
 
 My project received a mark of 70% leading to the award of a first class BSc with honours.
 
-**The Open University, Student ID - mur17004251**
+**_The Open University, Student ID - mur17004251_**
